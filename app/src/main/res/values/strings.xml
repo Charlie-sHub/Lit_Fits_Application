@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Lit_Fits_Application</string>
+    <string name="buttonLogOut">Log Out</string>
+    <string name="buttonRecommendation">Recommendation</string>
+    <string name="buttonTaste">Check tastes</string>
+    <string name="buttonCloset">Check Closet</string>
+    <string name="buttonModifyAccount">Modify Account</string>
 </resources>
