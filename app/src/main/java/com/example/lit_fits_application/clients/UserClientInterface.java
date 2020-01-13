@@ -15,7 +15,7 @@ import retrofit2.http.Path;
  * Interface for the userClient
  * @author Carlos Mendez
  */
-public interface userClientInterface {
+public interface UserClientInterface {
     /**
      * Gets the user with the received username.
      *

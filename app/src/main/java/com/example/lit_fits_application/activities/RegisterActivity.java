@@ -9,9 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+
 import com.example.lit_fits_application.R;
+import com.example.lit_fits_application.clients.ClientFactory;
+import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.entities.UserType;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class RegisterActivity extends Activity implements View.OnClickListener {
@@ -25,6 +32,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private ArrayList<EditText> textFields;
     private User user;
     private Bundle extrasBundle;
+    private String uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +40,26 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         findViews();
-
-        btnSubmit.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
+        setListeners();
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
+        uri = extrasBundle.getString("URI");
         textFields = new ArrayList<>();
 
         addFieldsToArray();
     }
 
+    /**
+     * Sets the Listeners for the elements of the View
+     */
+    private void setListeners() {
+        btnSubmit.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+    }
+
+    /**
+     * Assigns the Views
+     */
     private void findViews() {
         btnSubmit = findViewById(R.id.btnSubmit);
         btnCancel = findViewById(R.id.btnCancel);
@@ -52,6 +70,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         fieldFullName = findViewById(R.id.fieldFullName);
     }
 
+    /**
+     * Adds the fields to an array to check later if they're filled
+     */
     private void addFieldsToArray() {
         textFields.add(fieldUsername);
         textFields.add(fieldFullName);
@@ -76,58 +97,71 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     }
                 }
                 if (fieldPassword.getText().equals(fieldConfirmPassword.getText()) && filledFields) {
+                    UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
                     createUser();
-                    ClientThread client = new ClientThread();
-                    client.setAction("SIGNIN");
-                    client.setUser(user);
-                    client.setAppLogic(appLogic);
-                    client.start();
-                    try {
-                        client.join();
-                    } catch (Exception e) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.setMessage(e.getMessage());
-                        alert.show();
-                    }
-                    if (client.getMessage().getContent() instanceof Boolean) {
-                        Intent mainMenuActivityIntent = new Intent(this, MainMenuActivity.class);
-                        mainMenuActivityIntent.putExtra("USER", user);
-                        startActivity(mainMenuActivityIntent);
-                    } else {
-                        Exception e = (Exception) client.getMessage().getContent();
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.setMessage(e.getMessage());
-                        alert.show();
-                    }
+                    Call<User> call = userClientInterface.create(user);
+                    call.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if (response.code() == 200) {
+                                openMainMenu(response);
+                            } else if (response.code() == 500) {
+                                createAlertDialog("Unknown Error");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            createAlertDialog(t.getMessage());
+                        }
+                    });
                 } else if (!fieldPassword.getText().equals(fieldConfirmPassword.getText())) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setMessage("Passwords don't match");
-                    alert.show();
+                    createAlertDialog("Passwords don't match");
                 } else if (!filledFields) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setMessage("There are empty fields");
-                    alert.show();
+                    createAlertDialog("There are empty fields");
                 }
             } else if (v.getId() == btnCancel.getId()) {
                 Intent loginActivityIntent = new Intent(this, LoginActivity.class);
                 startActivity(loginActivityIntent);
             }
         } catch (Exception e) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.show();
+            createAlertDialog(e.getMessage());
         }
+    }
+
+    /**
+     * Creates an AlertDialog
+     *
+     * @param message
+     */
+    private void createAlertDialog(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message);
+        alert.show();
     }
 
     /**
      * Creates and sets the data of the user to be sent to the server
      */
-    private void createUser() {
+    private User createUser() {
         user = new User();
         user.setEmail(String.valueOf(fieldEmail.getText()));
         user.setFullName(String.valueOf(fieldFullName.getText()));
         user.setUsername(String.valueOf(fieldUsername.getText()));
         user.setPassword(String.valueOf(fieldPassword.getText()));
         user.setType(UserType.USER);
+        return user;
+    }
+
+    /**
+     * Opens the MainMenuActivity after a successful Registration
+     *
+     * @param response
+     */
+    private void openMainMenu(@org.jetbrains.annotations.NotNull Response<User> response) {
+        Intent MainMenuIntent = new Intent(this, MainMenuActivity.class);
+        MainMenuIntent.putExtra("URI", uri);
+        MainMenuIntent.putExtra("USER", response.body());
+        startActivity(MainMenuIntent);
     }
 }

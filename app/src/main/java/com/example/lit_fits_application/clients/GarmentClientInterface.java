@@ -16,7 +16,7 @@ import retrofit2.http.Path;
  * Interface for the garmentClient
  * @author Carlos Mendez
  */
-public interface garmentClientInterface {
+public interface GarmentClientInterface {
     /**
      * Closes the client
      */

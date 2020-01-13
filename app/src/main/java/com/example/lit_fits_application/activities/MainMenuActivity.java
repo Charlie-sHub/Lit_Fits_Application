@@ -21,19 +21,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private User user;
     private MediaPlayer musicPlayer;
     private Bundle extrasBundle;
+    private String uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        musicPlayer = MediaPlayer.create(MainMenuActivity.this,R.raw.app_soundtrack);
+        musicPlayer = MediaPlayer.create(MainMenuActivity.this, R.raw.app_soundtrack);
         musicPlayer.start();
         findButtons();
         setListenerForButtons();
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
+        uri = extrasBundle.getString("URI");
         user = (User) extrasBundle.get("USER");
-
     }
 
     private void setListenerForButtons() {
@@ -55,28 +56,32 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         try {
-            if(v.getId() == buttonCloset.getId()){
+            if (v.getId() == buttonCloset.getId()) {
                 Intent closetActivityIntent = new Intent(this, ClosetActivity.class);
                 closetActivityIntent.putExtra("USER", user);
+                closetActivityIntent.putExtra("URI", uri);
                 startActivity(closetActivityIntent);
-            } else if (v.getId() == buttonTastes.getId()){
+            } else if (v.getId() == buttonTastes.getId()) {
                 Intent tastesActivityIntent = new Intent(this, TastesActivity.class);
                 tastesActivityIntent.putExtra("USER", user);
+                tastesActivityIntent.putExtra("URI", uri);
                 startActivity(tastesActivityIntent);
             } else if (v.getId() == buttonRecommendation.getId()) {
                 Intent recommendationActivityIntent = new Intent(this, RecommendationActivity.class);
                 recommendationActivityIntent.putExtra("USER", user);
+                recommendationActivityIntent.putExtra("URI", uri);
                 startActivity(recommendationActivityIntent);
             } else if (v.getId() == buttonModifyAccount.getId()) {
                 Intent modifyAccountActivityIntent = new Intent(this, ModifyAccountActivity.class);
                 modifyAccountActivityIntent.putExtra("USER", user);
+                modifyAccountActivityIntent.putExtra("URI", uri);
                 startActivity(modifyAccountActivityIntent);
             } else if (v.getId() == buttonLogOut.getId()) {
                 Intent loginActivityIntent = new Intent(this, LoginActivity.class);
                 user = null;
                 startActivity(loginActivityIntent);
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setMessage(ex.getMessage());
             alert.show();

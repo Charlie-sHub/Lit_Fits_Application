@@ -8,11 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.lit_fits_application.R;
+import com.example.lit_fits_application.clients.ClientFactory;
+import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,19 +27,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnRegister;
     private ArrayList<EditText> textFields;
     private User user;
+    private String uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         findViews();
-        btnLogin.setOnClickListener(this);
-        btnRegister.setOnClickListener(this);
+        setListeners();
         textFields = new ArrayList<>();
         addFieldsToArray();
+        // Read the uri
     }
 
+    /**
+     * Sets the Listeners for the elements of the View
+     */
+    private void setListeners() {
+        btnLogin.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
+    }
 
+    /**
+     * Assigns the Views
+     */
     private void findViews() {
         fieldUsername = findViewById(R.id.fieldUsername);
         fieldPassword = findViewById(R.id.fieldPassword);
@@ -42,12 +58,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnRegister = findViewById(R.id.btnRegister);
     }
 
+    /**
+     * Adds the fields to an array to check later if they're filled
+     */
     private void addFieldsToArray() {
         textFields.add(fieldUsername);
         textFields.add(fieldPassword);
 
     }
 
+    /**
+     * Controls the buttons
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         try {
@@ -58,14 +82,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         } catch (Exception e) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.show();
-            e.printStackTrace(); // just to test something
+            createAlertDialog(e.getMessage());
         }
     }
 
-    private void userLogin() {
+    /**
+     * Sets the data entered for the User object
+     */
+    private void setUserLoginData() {
         user = new User();
         user.setUsername(String.valueOf(fieldUsername.getText()));
         user.setPassword(String.valueOf(fieldPassword.getText()));
@@ -73,8 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * This method will be on charge of doing the login.
-     * Will be initialised when the client click the login method
-     * Firstly will verify if all the fields are filled, then would try to connect and verify the data
+     * First it will verify if all the fields are filled, then will try to connect and verify the data
      */
     public void onBtnLoginPress() {
         boolean filledFields = true;
@@ -85,45 +108,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         if (filledFields) {
-            userLogin();
-            ClientThread client = new ClientThread();
-            client.setAction("LOGIN");
-            client.setUser(user);
-            client.setAppLogic(appLogic);
-            client.start();
-            try {
-                client.join();
-            } catch (Exception e) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setMessage(e.getMessage());
-                alert.show();
-            }
-            if (client.getMessage().getContent() instanceof User) {
-                user = (User) client.getMessage().getContent();
-                Intent mainMenuActivityIntent = new Intent(this, MainMenuActivity.class);
-                mainMenuActivityIntent.putExtra("USER", user);
-                startActivity(mainMenuActivityIntent);
-            } else {
-                Exception e = (Exception) client.getMessage().getContent();
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setMessage(e.getMessage());
-                alert.show();
-            }
+            UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
+            setUserLoginData();
+            Call<User> call = userClientInterface.login(user);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.code() == 200) {
+                        openMainMenu(response);
+                    } else if (response.code() == 404) {
+                        createAlertDialog("Not Found");
+                    } else if (response.code() == 500) {
+                        createAlertDialog("Unknown Error");
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    createAlertDialog(t.getMessage());
+                }
+            });
         } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage("There are empty fields");
-            alert.show();
+            createAlertDialog("There are empty fields");
         }
     }
 
     /**
-     * This function will be on charge of throwing the user to the register windows
-     * Will be initialised when the user clicks on the register button
+     * Opens the MainMenuActivity after a successful login
+     *
+     * @param response
+     */
+    private void openMainMenu(@org.jetbrains.annotations.NotNull Response<User> response) {
+        Intent MainMenuIntent = new Intent(this, MainMenuActivity.class);
+        MainMenuIntent.putExtra("URI", uri);
+        MainMenuIntent.putExtra("USER", response.body());
+        startActivity(MainMenuIntent);
+    }
+
+    /**
+     * Creates an AlertDialog
+     *
+     * @param message
+     */
+    private void createAlertDialog(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message);
+        alert.show();
+    }
+
+    /**
+     * Opens the Registration Activity
      */
     public void onBtnRegisterPress() {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
-        registerIntent.putExtra("APPLOGIC");
+        registerIntent.putExtra("URI", uri);
         startActivity(registerIntent);
     }
 }

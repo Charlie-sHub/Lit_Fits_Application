@@ -16,7 +16,7 @@ import retrofit2.http.Path;
  * Probably useless for the app
  * @author Carlos Mendez
  */
-public interface companyClientInterface {
+public interface CompanyClientInterface {
     /**
      * Closes the instance of the client
      */

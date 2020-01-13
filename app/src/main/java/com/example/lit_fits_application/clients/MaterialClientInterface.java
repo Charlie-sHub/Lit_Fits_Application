@@ -15,7 +15,7 @@ import retrofit2.http.Path;
  * Interface for the materialClient
  * @author Carlos Mendez
  */
-public interface materialClientInterface {
+public interface MaterialClientInterface {
     /**
      * Closes the client
      */

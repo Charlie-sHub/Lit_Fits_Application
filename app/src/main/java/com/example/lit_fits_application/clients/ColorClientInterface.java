@@ -15,7 +15,7 @@ import retrofit2.http.Path;
  * Interface for the colorClient
  * @author Carlos Mendez
  */
-public interface colorClientInterface {
+public interface ColorClientInterface {
     /**
      * Closes the client
      */
