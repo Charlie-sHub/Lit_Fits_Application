@@ -2,6 +2,7 @@ package com.example.lit_fits_application.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,20 +20,52 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
+/**
+ * Activity to login, where the app starts
+ *
+ * @author Carlos Mendez
+ */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * Field to enter the username
+     */
     private EditText fieldUsername;
+    /**
+     * Field to enter the password
+     */
     private EditText fieldPassword;
+    /**
+     * Button to attempt login
+     */
     private Button btnLogin;
+    /**
+     * Button to open the registration activity
+     */
     private Button btnRegister;
+    /**
+     * ArrayList of text fields to check if they're filled
+     */
     private ArrayList<EditText> textFields;
+    /**
+     * User to attempt login
+     */
     private User user;
+    /**
+     * Address of the server
+     */
     private String uri;
+    /**
+     * Lit tunes yo!
+     */
+    private MediaPlayer musicPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.app_soundtrack);
+        musicPlayer.start();
+        uri = getResources().getString(R.string.uri);
         findViews();
         setListeners();
         textFields = new ArrayList<>();

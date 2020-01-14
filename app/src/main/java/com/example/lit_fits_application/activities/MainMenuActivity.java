@@ -19,7 +19,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button buttonModifyAccount;
     private Button buttonLogOut;
     private User user;
-    private MediaPlayer musicPlayer;
     private Bundle extrasBundle;
     private String uri;
 
@@ -27,8 +26,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        musicPlayer = MediaPlayer.create(MainMenuActivity.this, R.raw.app_soundtrack);
-        musicPlayer.start();
         findButtons();
         setListenerForButtons();
         extrasBundle = new Bundle();
