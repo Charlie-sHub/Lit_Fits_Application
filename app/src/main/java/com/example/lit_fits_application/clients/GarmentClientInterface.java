@@ -5,6 +5,7 @@ import com.example.lit_fits_application.entities.Garment;
 import java.io.File;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -26,19 +27,19 @@ public interface GarmentClientInterface {
      * Counts the total amount of garments
      */
     @GET("count")
-    int countREST();
+    Call<Integer> countREST();
 
     /**
      * Creates a new garment
      */
     @POST
-    void createGarment(@Body Garment garment);
+    Call<Void> createGarment(@Body Garment garment);
 
     /**
      * Updates a garment with the data send
      */
     @PUT
-    void editGarment(@Body Garment garment);
+    Call<Void> editGarment(@Body Garment garment);
 
     /**
      * Finds a garment by id
@@ -47,7 +48,7 @@ public interface GarmentClientInterface {
      * @return Garment
      */
     @GET("{id}")
-    Garment findGarment(@Path("id") String id);
+    Call<Garment> findGarment(@Path("id") String id);
 
     /**
      * Finds all garments
@@ -55,7 +56,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET
-    List<Garment> findGarmentAll();
+    Call<List<Garment>> findGarmentAll();
 
     /**
      * Finds the garment with the given barcode
@@ -64,7 +65,7 @@ public interface GarmentClientInterface {
      * @return Garment
      */
     @GET("barcode/{barcode}")
-    Garment findGarmentGarmentByBarcode(@Path("barcode") String barcode);
+    Call<Garment> findGarmentGarmentByBarcode(@Path("barcode") String barcode);
 
     /**
      * Finds all the garments of a given company
@@ -73,7 +74,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("company/{nif}")
-    List<Garment> findGarmentGarmentsByCompany(@Path("nif") String nif);
+    Call<List<Garment>> findGarmentGarmentsByCompany(@Path("nif") String nif);
 
     /**
      * Finds all the garments with or without requested promotions
@@ -82,7 +83,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("request/{requested}")
-    List<Garment> findGarmentGarmentsByRequest(@Path("requested") String requested);
+    Call<List<Garment>> findGarmentGarmentsByRequest(@Path("requested") String requested);
 
     /**
      * Finds all promoted garments
@@ -91,7 +92,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("promotion/{promoted}")
-    List<Garment> findGarmentGarmentsPromoted(@Path("promoted") String promoted);
+    Call<List<Garment>> findGarmentGarmentsPromoted(@Path("promoted") String promoted);
 
     /**
      * Gets the picture of the garment
@@ -100,7 +101,7 @@ public interface GarmentClientInterface {
      * @return FIle
      */
     @GET("picture/{id}")
-    File getImage(@Path("id")String id);
+    Call<File> getImage(@Path("id")String id);
 
     /**
      * Deletes the garment associated with the given id
@@ -108,5 +109,5 @@ public interface GarmentClientInterface {
      * @param id
      */
     @DELETE("{id}")
-    void remove(@Path("id") String id);
+    Call<Void> remove(@Path("id") String id);
 }

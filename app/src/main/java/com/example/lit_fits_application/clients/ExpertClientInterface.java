@@ -6,6 +6,7 @@ import com.example.lit_fits_application.entities.Material;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -29,7 +30,7 @@ public interface ExpertClientInterface {
      * @param fashionExpert
      */
     @POST
-    void create(@Body FashionExpert fashionExpert);
+    Call<Void> create(@Body FashionExpert fashionExpert);
 
     /**
      * Updates the data of a Fashion Expert
@@ -37,7 +38,7 @@ public interface ExpertClientInterface {
      * @param fashionExpert
      */
     @PUT
-    void edit(@Body FashionExpert fashionExpert);
+    Call<Void> edit(@Body FashionExpert fashionExpert);
 
 
     /**
@@ -47,7 +48,7 @@ public interface ExpertClientInterface {
      * @return FashionExpert
      */
     @GET
-    FashionExpert find(@Path("id") String id);
+    Call<FashionExpert> find(@Path("id") String id);
 
     /**
      * Reestablishes the password of associated Expert with the given username, sending an email with the new password
@@ -55,7 +56,7 @@ public interface ExpertClientInterface {
      * @param username
      */
     @GET
-    void reestablishPassword(@Path("username") String username);
+    Call<Void> reestablishPassword(@Path("username") String username);
 
     /**
      * Deletes the Expert with the given id
@@ -63,7 +64,7 @@ public interface ExpertClientInterface {
      * @param id
      */
     @DELETE
-    void remove(@Path("id") String id);
+    Call<Void> remove(@Path("id") String id);
 
     /**
      * Takes an username and password ,encapsulated in a FashionExpert object,
@@ -73,7 +74,7 @@ public interface ExpertClientInterface {
      * @return FashionExpert
      */
     @POST("login/")
-    FashionExpert login(@Body FashionExpert fashionExpert);
+    Call<FashionExpert> login(@Body FashionExpert fashionExpert);
     /* Yet to implement the get all recommended colors and materials */
 
     /**
@@ -81,12 +82,12 @@ public interface ExpertClientInterface {
      * @return List of Colors
      */
     @GET
-    List<Color> recommendedColors();
+    Call<List<Color>> recommendedColors();
 
     /**
      * Finds all the materials recommended by experts
      * @return List of Material
      */
     @GET
-    List<Material> recommendedMaterials();
+    Call<List<Material>> recommendedMaterials();
 }

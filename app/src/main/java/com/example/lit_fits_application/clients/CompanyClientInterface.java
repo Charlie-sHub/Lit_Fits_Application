@@ -4,6 +4,7 @@ import com.example.lit_fits_application.entities.Company;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -28,7 +29,7 @@ public interface CompanyClientInterface {
      * @return String
      */
     @GET("count")
-    int countREST();
+    Call<Integer> countREST();
 
     /**
      * Sends a request to save a new company in the database
@@ -36,7 +37,7 @@ public interface CompanyClientInterface {
      * @param company
      */
     @POST
-    void create(@Body Company company);
+    Call<Void> create(@Body Company company);
 
     /**
      * Updates the data of a given company
@@ -44,7 +45,7 @@ public interface CompanyClientInterface {
      * @param company
      */
     @PUT
-    void edit(@Body Company company);
+    Call<Void> edit(@Body Company company);
 
     /**
      * Finds and returns a company by a given id
@@ -53,7 +54,7 @@ public interface CompanyClientInterface {
      * @return Company
      */
     @GET("{id}")
-    Company find(@Path("id") String id);
+    Call<Company> find(@Path("id") String id);
 
     /**
      * Returns all the companies in the database
@@ -61,7 +62,7 @@ public interface CompanyClientInterface {
      * @return List of Companies
      */
     @GET
-    List<Company> findAll();
+    Call<List<Company>> findAll();
 
     /**
      * Finds and returns a company by a given nif
@@ -70,7 +71,7 @@ public interface CompanyClientInterface {
      * @return Company
      */
     @GET("company/{nif}")
-    Company findCompanyByNif(@Path("nif") String nif);
+    Call<Company> findCompanyByNif(@Path("nif") String nif);
 
     /**
      * Takes a nif and password (encapsulated in a Company object) and returns the full company
@@ -79,7 +80,7 @@ public interface CompanyClientInterface {
      * @return Company
      */
     @POST("login/")
-    Company login(@Body Company company);
+    Call<Company> login(@Body Company company);
 
     /**
      * Reestablishes the password of associated with the given nif, sending an email with the new password
@@ -87,7 +88,7 @@ public interface CompanyClientInterface {
      * @param nif
      */
     @GET("passwordReestablishment/{nif}")
-    void reestablishPassword(@Path("nif")String nif);
+    Call<Void> reestablishPassword(@Path("nif")String nif);
 
     /**
      * Deletes the company with the given id
@@ -95,6 +96,6 @@ public interface CompanyClientInterface {
      * @param id
      */
     @DELETE("{id}")
-    void remove(@Path("id")String id);
+    Call<Void> remove(@Path("id")String id);
 
 }

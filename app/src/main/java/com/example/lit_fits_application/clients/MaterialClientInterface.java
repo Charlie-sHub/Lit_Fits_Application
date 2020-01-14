@@ -4,6 +4,7 @@ import com.example.lit_fits_application.entities.Material;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -27,7 +28,7 @@ public interface MaterialClientInterface {
      * @return int
      */
     @GET("count")
-    int count();
+    Call<Integer> count();
 
     /**
      * Creates a new Material
@@ -35,7 +36,7 @@ public interface MaterialClientInterface {
      * @param Material
      */
     @POST
-    void create(@Body Material Material);
+    Call<Void> create(@Body Material Material);
 
     /**
      * Edits a given Material
@@ -43,7 +44,7 @@ public interface MaterialClientInterface {
      * @param Material
      */
     @PUT
-    void edit(@Body Material Material);
+    Call<Void> edit(@Body Material Material);
 
     /**
      * Finds all the Materials
@@ -52,7 +53,7 @@ public interface MaterialClientInterface {
      * @return Material
      */
     @GET("{name}")
-    Material find(@Path("name") String name);
+    Call<Material> find(@Path("name") String name);
 
     /**
      * Finds all the Materials
@@ -60,7 +61,7 @@ public interface MaterialClientInterface {
      * @return List of Materials
      */
     @GET
-    List<Material> findAll();
+    Call<List<Material>> findAll();
 
     /**
      * Deletes a Material given its name
@@ -68,5 +69,5 @@ public interface MaterialClientInterface {
      * @param name
      */
     @DELETE("{name}")
-    void remove(@Path("name")String name);
+    Call<Void> remove(@Path("name")String name);
 }

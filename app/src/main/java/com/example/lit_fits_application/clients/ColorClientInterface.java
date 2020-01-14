@@ -4,6 +4,8 @@ import com.example.lit_fits_application.entities.Color;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -27,7 +29,7 @@ public interface ColorClientInterface {
      * @return int
      */
     @GET("count")
-    int count();
+    Call<Integer> count();
 
     /**
      * Creates a new color
@@ -35,7 +37,7 @@ public interface ColorClientInterface {
      * @param color
      */
     @POST
-    void create(@Body Color color);
+    Call<Void> create(@Body Color color);
 
     /**
      * Edits a given color
@@ -43,7 +45,7 @@ public interface ColorClientInterface {
      * @param color
      */
     @PUT
-    void edit(@Body Color color);
+    Call<Void> edit(@Body Color color);
 
     /**
      * Finds all the colors
@@ -52,7 +54,7 @@ public interface ColorClientInterface {
      * @return Color
      */
     @GET("{name}")
-    Color find(@Path("name") String name);
+    Call<Color> find(@Path("name") String name);
 
     /**
      * Finds all the colors
@@ -60,7 +62,7 @@ public interface ColorClientInterface {
      * @return List of Colors
      */
     @GET
-    List<Color> findAll();
+    Call<List<Color>> findAll();
 
     /**
      * Deletes a color given its name
@@ -68,5 +70,5 @@ public interface ColorClientInterface {
      * @param name
      */
     @DELETE("{name}")
-    void remove(@Path("name")String name);
+    Call<Void> remove(@Path("name")String name);
 }

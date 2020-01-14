@@ -16,23 +16,60 @@ import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.entities.UserType;
 
+import org.jetbrains.annotations.NotNull;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
+/**
+ * Activity for the registration of new Users
+ *
+ * @author Carlos Mendez
+ */
 public class RegisterActivity extends Activity implements View.OnClickListener {
+    /**
+     * Button to submit the data entered
+     */
     private Button btnSubmit;
+    /**
+     * Button to cancel the registration
+     */
     private Button btnCancel;
+    /**
+     * Field to enter the username
+     */
     private EditText fieldUsername;
+    /**
+     * Field to enter the password
+     */
     private EditText fieldPassword;
+    /**
+     * Field to enter the password again to confirm
+     */
     private EditText fieldConfirmPassword;
+    /**
+     * Field to enter the email
+     */
     private EditText fieldEmail;
+    /**
+     * Field to enter the full name
+     */
     private EditText fieldFullName;
+    /**
+     * ArrayList of Fields, to check if they're filled
+     */
     private ArrayList<EditText> textFields;
+    /**
+     * User registering
+     */
     private User user;
-    private Bundle extrasBundle;
+    /**
+     * Address of the server
+     */
     private String uri;
+    private Bundle extrasBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,20 +135,20 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 }
                 if (fieldPassword.getText().equals(fieldConfirmPassword.getText()) && filledFields) {
                     UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
-                    createUser();
-                    Call<User> call = userClientInterface.create(user);
-                    call.enqueue(new Callback<User>() {
+                    setUserData();
+                    Call<Void> call = userClientInterface.createUser(user);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() == 200) {
-                                openMainMenu(response);
+                                openMainMenu(user);
                             } else if (response.code() == 500) {
                                 createAlertDialog("Unknown Error");
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             createAlertDialog(t.getMessage());
                         }
                     });
@@ -143,25 +180,24 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     /**
      * Creates and sets the data of the user to be sent to the server
      */
-    private User createUser() {
+    private void setUserData() {
         user = new User();
         user.setEmail(String.valueOf(fieldEmail.getText()));
         user.setFullName(String.valueOf(fieldFullName.getText()));
         user.setUsername(String.valueOf(fieldUsername.getText()));
         user.setPassword(String.valueOf(fieldPassword.getText()));
         user.setType(UserType.USER);
-        return user;
     }
 
     /**
      * Opens the MainMenuActivity after a successful Registration
      *
-     * @param response
+     * @param user
      */
-    private void openMainMenu(@org.jetbrains.annotations.NotNull Response<User> response) {
+    private void openMainMenu(@NotNull User user) {
         Intent MainMenuIntent = new Intent(this, MainMenuActivity.class);
         MainMenuIntent.putExtra("URI", uri);
-        MainMenuIntent.putExtra("USER", response.body());
+        MainMenuIntent.putExtra("USER", user);
         startActivity(MainMenuIntent);
     }
 }

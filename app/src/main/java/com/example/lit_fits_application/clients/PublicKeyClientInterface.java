@@ -1,5 +1,6 @@
 package com.example.lit_fits_application.clients;
 
+import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface PublicKeyClientInterface {
@@ -14,5 +15,5 @@ public interface PublicKeyClientInterface {
      * @return byte[]
      */
     @GET
-    byte[] getPublicKey();
+    Call<byte[]> getPublicKey();
 }
