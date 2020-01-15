@@ -69,7 +69,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
      * Address of the server
      */
     private String uri;
-    private Bundle extrasBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +77,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_register);
         findViews();
         setListeners();
-        extrasBundle = new Bundle();
-        extrasBundle = getIntent().getExtras();
-        uri = extrasBundle.getString("URI");
+        uri = getResources().getString(R.string.uri);
         textFields = new ArrayList<>();
 
         addFieldsToArray();

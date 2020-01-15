@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setListeners();
         textFields = new ArrayList<>();
         addFieldsToArray();
-        // Read the uri
+        // Implement SQLite so the user doesn't need to log in again
     }
 
     /**
@@ -173,7 +173,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void openMainMenu(@org.jetbrains.annotations.NotNull Response<User> response) {
         Intent MainMenuIntent = new Intent(this, MainMenuActivity.class);
-        MainMenuIntent.putExtra("URI", uri);
         MainMenuIntent.putExtra("USER", response.body());
         startActivity(MainMenuIntent);
     }
@@ -194,7 +193,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     public void onBtnRegisterPress() {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
-        registerIntent.putExtra("URI", uri);
         startActivity(registerIntent);
     }
 }

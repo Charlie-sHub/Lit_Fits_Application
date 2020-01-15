@@ -91,7 +91,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
-        uri = extrasBundle.getString("URI");
+        uri = getResources().getString(R.string.uri);
         fillColorList();
         fillMaterialList();
         fillLists();

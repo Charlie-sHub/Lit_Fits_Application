@@ -20,7 +20,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button buttonLogOut;
     private User user;
     private Bundle extrasBundle;
-    private String uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setListenerForButtons();
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
-        uri = extrasBundle.getString("URI");
         user = (User) extrasBundle.get("USER");
     }
 
@@ -56,22 +54,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             if (v.getId() == buttonCloset.getId()) {
                 Intent closetActivityIntent = new Intent(this, ClosetActivity.class);
                 closetActivityIntent.putExtra("USER", user);
-                closetActivityIntent.putExtra("URI", uri);
                 startActivity(closetActivityIntent);
             } else if (v.getId() == buttonTastes.getId()) {
                 Intent tastesActivityIntent = new Intent(this, TastesActivity.class);
                 tastesActivityIntent.putExtra("USER", user);
-                tastesActivityIntent.putExtra("URI", uri);
                 startActivity(tastesActivityIntent);
             } else if (v.getId() == buttonRecommendation.getId()) {
                 Intent recommendationActivityIntent = new Intent(this, RecommendationActivity.class);
                 recommendationActivityIntent.putExtra("USER", user);
-                recommendationActivityIntent.putExtra("URI", uri);
                 startActivity(recommendationActivityIntent);
             } else if (v.getId() == buttonModifyAccount.getId()) {
                 Intent modifyAccountActivityIntent = new Intent(this, ModifyAccountActivity.class);
                 modifyAccountActivityIntent.putExtra("USER", user);
-                modifyAccountActivityIntent.putExtra("URI", uri);
                 startActivity(modifyAccountActivityIntent);
             } else if (v.getId() == buttonLogOut.getId()) {
                 Intent loginActivityIntent = new Intent(this, LoginActivity.class);
