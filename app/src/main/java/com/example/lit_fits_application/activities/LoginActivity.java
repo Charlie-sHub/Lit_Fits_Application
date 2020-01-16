@@ -1,17 +1,22 @@
 package com.example.lit_fits_application.activities;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
+import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 
 import java.util.ArrayList;
 
@@ -25,7 +30,7 @@ import retrofit2.Response;
  *
  * @author Carlos Mendez
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
     /**
      * Field to enter the username
      */
@@ -70,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setListeners();
         textFields = new ArrayList<>();
         addFieldsToArray();
-        // Implement SQLite so the user doesn't need to log in again
+
     }
 
     /**
@@ -79,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void setListeners() {
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        fieldUsername.setOnFocusChangeListener(this);
     }
 
     /**
@@ -103,14 +109,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Controls the buttons
      *
-     * @param v
+     * @param view
      */
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
-            if (v.getId() == btnLogin.getId()) {
+            if (view.getId() == btnLogin.getId()) {
                 onBtnLoginPress();
-            } else if (v.getId() == btnRegister.getId()) {
+            } else if (view.getId() == btnRegister.getId()) {
                 onBtnRegisterPress();
             }
 
@@ -148,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.code() == 200) {
+                        registerUser();
                         openMainMenu(response);
                     } else if (response.code() == 404) {
                         createAlertDialog("Not Found");
@@ -194,5 +201,59 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onBtnRegisterPress() {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
         startActivity(registerIntent);
+    }
+
+    /**
+     * Saves the username and password of the User in a database so the app "remembers" the password
+     */
+    public void registerUser() {
+        // What database file?
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
+        SQLiteDatabase database = admin.getWritableDatabase();
+        String username = fieldUsername.getText().toString();
+        String password = fieldPassword.getText().toString();
+        if (!username.isEmpty() && !password.isEmpty()) {
+            ContentValues register = new ContentValues();
+            register.put("username", username);
+            register.put("password", password);
+            database.insert("users", null, register);
+            database.close();
+        } else {
+            Toast.makeText(this, "You must fill all the fields", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Looks for the password of the User
+     */
+    public void searchUser() {
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
+        SQLiteDatabase database = admin.getWritableDatabase();
+        String username = fieldUsername.getText().toString();
+        if (!username.isEmpty()) {
+            Cursor row = database.rawQuery("select password from users where username =" + username, null);
+            if (row.moveToFirst()) {
+                fieldPassword.setText(row.getString(0));
+                database.close();
+            } else {
+                Toast.makeText(this, "No username found, first timer huh?", Toast.LENGTH_SHORT).show();
+                database.close();
+            }
+        } else {
+            Toast.makeText(this, "You must introduce the username", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Checks when the focus changes and acts accordingly
+     *
+     * @param view
+     * @param hasFocus
+     */
+    @Override
+    public void onFocusChange(View view, boolean hasFocus) {
+        if (view.getId() == fieldPassword.getId()) {
+            searchUser();
+        }
     }
 }
