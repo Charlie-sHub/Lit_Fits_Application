@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
@@ -18,7 +22,6 @@ import com.example.lit_fits_application.entities.UserType;
 
 import org.jetbrains.annotations.NotNull;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,15 +75,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         findViews();
         setListeners();
         uri = getResources().getString(R.string.uri);
         textFields = new ArrayList<>();
-
         addFieldsToArray();
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Explode());
     }
 
     /**
@@ -151,8 +155,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     });
                 } else if (!fieldPassword.getText().equals(fieldConfirmPassword.getText())) {
                     createAlertDialog("Passwords don't match");
+                    fieldConfirmPassword.requestFocus();
                 } else if (!filledFields) {
                     createAlertDialog("There are empty fields");
+                    // Finds the first empty field and focuses it
+                    Optional<EditText> optional = textFields.stream().filter(editText -> editText.getText().equals("")).findFirst();
+                    optional.get().requestFocus();
                 }
             } else if (v.getId() == btnCancel.getId()) {
                 Intent loginActivityIntent = new Intent(this, LoginActivity.class);

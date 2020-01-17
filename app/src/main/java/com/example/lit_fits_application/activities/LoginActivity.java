@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
@@ -75,7 +78,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setListeners();
         textFields = new ArrayList<>();
         addFieldsToArray();
-
+        // Setting the transitions
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setExitTransition(new Explode());
     }
 
     /**
@@ -146,6 +151,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             }
         }
+        // If the fields are all filled then the login attempt can continue
         if (filledFields) {
             UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
             setUserLoginData();
@@ -157,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         registerUser();
                         openMainMenu(response);
                     } else if (response.code() == 404) {
-                        createAlertDialog("Not Found");
+                        createAlertDialog("User not found");
                     } else if (response.code() == 500) {
                         createAlertDialog("Unknown Error");
                     }
@@ -170,6 +176,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
         } else {
             createAlertDialog("There are empty fields");
+            // Finds the first empty field and focuses it
+            Optional<EditText> optional = textFields.stream().filter(editText -> editText.getText().equals("")).findFirst();
+            optional.get().requestFocus();
         }
     }
 

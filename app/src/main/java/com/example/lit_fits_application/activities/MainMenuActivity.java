@@ -4,20 +4,45 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.entities.User;
 
+/**
+ * Activity for the main menu of Lit Fits
+ *
+ * @author Carlos Mendez
+ */
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * Button to go to the recommendations activity
+     */
     private Button buttonRecommendation;
+    /**
+     * Button to go to the tastes activity
+     */
     private Button buttonTastes;
+    /**
+     * Button to go to the closet activity
+     */
     private Button buttonCloset;
+    /**
+     * Button to go to the account modification activity
+     */
     private Button buttonModifyAccount;
+    /**
+     * Buttong to log out of Lit Fits
+     */
     private Button buttonLogOut;
+    /**
+     * The User that logged in
+     */
     private User user;
     private Bundle extrasBundle;
 
@@ -30,6 +55,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Explode());
     }
 
     private void setListenerForButtons() {
