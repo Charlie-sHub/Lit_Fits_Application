@@ -1,9 +1,27 @@
 package com.example.lit_fits_application.entities;
 
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+
 import java.util.List;
 
-@Element
+@Root(name = "garments")
 public class Garments {
-    @ElementList
+    @ElementList(data = false, empty = true, inline = true, name = "garment", required = false)
     private List<Garment> experts;
+
+    public Garments() {
+    }
+
+    public Garments(List<Garment> experts) {
+        this.experts = experts;
+    }
+
+    public List<Garment> getExperts() {
+        return experts;
+    }
+
+    public void setExperts(List<Garment> experts) {
+        this.experts = experts;
+    }
 }

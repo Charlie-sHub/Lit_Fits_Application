@@ -1,8 +1,7 @@
 package com.example.lit_fits_application.clients;
 
+import com.example.lit_fits_application.entities.Companies;
 import com.example.lit_fits_application.entities.Company;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -62,7 +61,7 @@ public interface CompanyClientInterface {
      * @return List of Companies
      */
     @GET
-    Call<List<Company>> findAll();
+    Call<Companies> findAll();
 
     /**
      * Finds and returns a company by a given nif

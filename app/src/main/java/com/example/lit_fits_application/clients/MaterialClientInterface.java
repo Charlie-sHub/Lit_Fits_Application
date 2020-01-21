@@ -1,8 +1,7 @@
 package com.example.lit_fits_application.clients;
 
 import com.example.lit_fits_application.entities.Material;
-
-import java.util.List;
+import com.example.lit_fits_application.entities.Materials;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -61,7 +60,7 @@ public interface MaterialClientInterface {
      * @return List of Materials
      */
     @GET
-    Call<List<Material>> findAll();
+    Call<Materials> findAll();
 
     /**
      * Deletes a Material given its name

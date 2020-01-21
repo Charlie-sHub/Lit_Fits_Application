@@ -1,10 +1,8 @@
 package com.example.lit_fits_application.clients;
 
-import com.example.lit_fits_application.entities.Color;
+import com.example.lit_fits_application.entities.Colors;
 import com.example.lit_fits_application.entities.FashionExpert;
-import com.example.lit_fits_application.entities.Material;
-
-import java.util.List;
+import com.example.lit_fits_application.entities.Materials;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -82,12 +80,12 @@ public interface ExpertClientInterface {
      * @return List of Colors
      */
     @GET
-    Call<List<Color>> recommendedColors();
+    Call<Colors> recommendedColors();
 
     /**
      * Finds all the materials recommended by experts
      * @return List of Material
      */
     @GET
-    Call<List<Material>> recommendedMaterials();
+    Call<Materials> recommendedMaterials();
 }

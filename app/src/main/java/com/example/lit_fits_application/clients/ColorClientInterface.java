@@ -1,10 +1,8 @@
 package com.example.lit_fits_application.clients;
 
 import com.example.lit_fits_application.entities.Color;
+import com.example.lit_fits_application.entities.Colors;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -62,7 +60,7 @@ public interface ColorClientInterface {
      * @return List of Colors
      */
     @GET
-    Call<List<Color>> findAll();
+    Call<Colors> findAll();
 
     /**
      * Deletes a color given its name

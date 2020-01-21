@@ -1,9 +1,9 @@
 package com.example.lit_fits_application.clients;
 
 import com.example.lit_fits_application.entities.Garment;
+import com.example.lit_fits_application.entities.Garments;
 
 import java.io.File;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -56,7 +56,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET
-    Call<List<Garment>> findGarmentAll();
+    Call<Garments> findGarmentAll();
 
     /**
      * Finds the garment with the given barcode
@@ -74,7 +74,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("company/{nif}")
-    Call<List<Garment>> findGarmentGarmentsByCompany(@Path("nif") String nif);
+    Call<Garments> findGarmentGarmentsByCompany(@Path("nif") String nif);
 
     /**
      * Finds all the garments with or without requested promotions
@@ -83,7 +83,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("request/{requested}")
-    Call<List<Garment>> findGarmentGarmentsByRequest(@Path("requested") String requested);
+    Call<Garments> findGarmentGarmentsByRequest(@Path("requested") String requested);
 
     /**
      * Finds all promoted garments
@@ -92,7 +92,7 @@ public interface GarmentClientInterface {
      * @return List of Garments
      */
     @GET("promotion/{promoted}")
-    Call<List<Garment>> findGarmentGarmentsPromoted(@Path("promoted") String promoted);
+    Call<Garments> findGarmentGarmentsPromoted(@Path("promoted") String promoted);
 
     /**
      * Gets the picture of the garment
