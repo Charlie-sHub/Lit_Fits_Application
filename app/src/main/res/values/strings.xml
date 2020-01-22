@@ -1,8 +1,25 @@
 <resources>
-    <string name="app_name">Lit_Fits_Application</string>
+    <!-- activity_login -->
+    <string name="app_name" translatable="false">Lit_Fits_Application</string>
+    <string name="lbl_title" translatable="false">Lit Fits</string>
+    <string name="lbl_user_name">Username:</string>
+    <string name="lbl_password">Password:</string>
+    <string name="lbl_no_account">You don\'t have an account?</string>
+    <string name="btn_login" translatable="false">login</string>
+    <string name="btn_register">register</string>
+    <!-- activity_register -->
+    <string name="btn_submit">submit</string>
+    <string name="btn_cancel">cancel</string>
+    <string name="field_username">Username</string>
+    <string name="field_email">Email</string>
+    <string name="field_full_name">Full Name</string>
+    <string name="field_password">Password</string>
+    <string name="field_password_confirm">Confirm Password</string>
+    <!-- activity_mainmenu -->
     <string name="buttonLogOut">Log Out</string>
     <string name="buttonRecommendation">Recommendation</string>
     <string name="buttonTaste">Check tastes</string>
     <string name="buttonCloset">Check Closet</string>
     <string name="buttonModifyAccount">Modify Account</string>
+    <string name="buttonGoBack">Back</string>
 </resources>

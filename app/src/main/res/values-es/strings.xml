@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_register">Registrate</string>
+    <string name="buttonCloset">Closet</string>
+    <string name="buttonGoBack">Volver</string>
+    <string name="buttonLogOut">Salir</string>
+    <string name="buttonModifyAccount">Modificar Cuenta</string>
+    <string name="buttonRecommendation">Recomendacion</string>
+    <string name="buttonTaste">Gustos</string>
+    <string name="field_email">Correo</string>
+    <string name="btn_submit">Inscribirme</string>
+    <string name="field_full_name">Nombre</string>
+    <string name="field_password">Contrseña</string>
+    <string name="field_password_confirm">Confirmacion</string>
+    <string name="field_username">Nombre de Usuario</string>
+    <string name="lbl_no_account">No tienes cuenta?</string>
+    <string name="lbl_password">Contraseña:</string>
+    <string name="lbl_user_name">Nombre de usuario:</string>
+</resources>
