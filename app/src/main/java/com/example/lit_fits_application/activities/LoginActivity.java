@@ -16,17 +16,22 @@ import android.widget.Toast;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
+import com.example.lit_fits_application.clients.PublicKeyClientInterface;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
+import com.example.lit_fits_application.miscellaneous.Encryptor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import androidx.appcompat.app.AppCompatActivity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Activity to login, where the app starts
@@ -66,6 +71,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Lit tunes yo!
      */
     private MediaPlayer musicPlayer;
+    /**
+     * Bytes of the publicKey
+     */
+    private byte[] publicKeyBytes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,17 +142,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Sets the data entered for the User object
      */
-    private void setUserLoginData() {
+    private void setUserLoginData() throws Exception {
         user = new User();
         user.setUsername(String.valueOf(fieldUsername.getText()));
-        user.setPassword(String.valueOf(fieldPassword.getText()));
+        String encryptedPassword = Encryptor.encryptText(String.valueOf(fieldPassword.getText()), publicKeyBytes);
+        user.setPassword(String.valueOf(encryptedPassword));
     }
 
     /**
      * This method will be on charge of doing the login.
      * First it will verify if all the fields are filled, then will try to connect and verify the data
      */
-    public void onBtnLoginPress() {
+    public void onBtnLoginPress() throws Exception {
         boolean filledFields = true;
         for (EditText field : textFields) {
             if (field.getText().length() == 0) {
@@ -153,33 +163,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         // If the fields are all filled then the login attempt can continue
         if (filledFields) {
-            UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
+            getPublicKey();
             setUserLoginData();
-            Call<User> call = userClientInterface.login(user);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.code() == 200) {
-                        registerUser();
-                        openMainMenu(response);
-                    } else if (response.code() == 404) {
-                        createAlertDialog("User not found");
-                    } else if (response.code() == 500) {
-                        createAlertDialog("Unknown Error");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    createAlertDialog(t.getMessage());
-                }
-            });
+            loginUser();
         } else {
             createAlertDialog("There are empty fields");
             // Finds the first empty field and focuses it
             Optional<EditText> optional = textFields.stream().filter(editText -> editText.getText().equals("")).findFirst();
             optional.get().requestFocus();
         }
+    }
+
+    /**
+     * Attempts a Login
+     */
+    private void loginUser() {
+        UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
+        Call<User> userCall = userClientInterface.login(user);
+        userCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    registerUser();
+                    openMainMenu(response);
+                } else if (response.code() == 404) {
+                    createAlertDialog("User not found");
+                } else if (response.code() == 500) {
+                    createAlertDialog("Unknown Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                createAlertDialog(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Attempts to get the public key from the server
+     */
+    private void getPublicKey() {
+        PublicKeyClientInterface publicKeyClientInterface = new ClientFactory().getPublicKeyClient(uri);
+        Call<ResponseBody> publicKeyCall = publicKeyClientInterface.getPublicKey();
+        publicKeyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
+                try {
+                    publicKeyBytes = response.body().bytes();
+                } catch (IOException e) {
+                    createAlertDialog("Server Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> response, Throwable t) {
+                createAlertDialog(t.getMessage());
+            }
+        });
     }
 
     /**

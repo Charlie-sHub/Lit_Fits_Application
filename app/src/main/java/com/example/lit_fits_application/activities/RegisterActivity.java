@@ -11,17 +11,21 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
+import com.example.lit_fits_application.clients.PublicKeyClientInterface;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.entities.UserType;
+import com.example.lit_fits_application.miscellaneous.Encryptor;
 
 import org.jetbrains.annotations.NotNull;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +76,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
      * Address of the server
      */
     private String uri;
+    /**
+     * Bytes of the public key
+     */
+    private byte[] publicKeyBytes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,24 +143,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     }
                 }
                 if (fieldPassword.getText().equals(fieldConfirmPassword.getText()) && filledFields) {
-                    UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
+                    getPublicKey();
                     setUserData();
-                    Call<Void> call = userClientInterface.createUser(user);
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.code() == 200) {
-                                openMainMenu(user);
-                            } else if (response.code() == 500) {
-                                createAlertDialog("Unknown Error");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            createAlertDialog(t.getMessage());
-                        }
-                    });
+                    registerUser();
                 } else if (!fieldPassword.getText().equals(fieldConfirmPassword.getText())) {
                     createAlertDialog("Passwords don't match");
                     fieldConfirmPassword.requestFocus();
@@ -172,6 +165,52 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     }
 
     /**
+     * Attempts to register the user
+     */
+    private void registerUser() {
+        UserClientInterface userClientInterface = new ClientFactory().getUserClient(uri);
+        Call<Void> call = userClientInterface.createUser(user);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    openMainMenu(user);
+                } else if (response.code() == 500) {
+                    createAlertDialog("Unknown Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                createAlertDialog(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Attempts to get the public key from the server
+     */
+    private void getPublicKey() {
+        PublicKeyClientInterface publicKeyClientInterface = new ClientFactory().getPublicKeyClient(uri);
+        Call<ResponseBody> publicKeyCall = publicKeyClientInterface.getPublicKey();
+        publicKeyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
+                try {
+                    publicKeyBytes = response.body().bytes();
+                } catch (IOException e) {
+                    createAlertDialog("Server Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> response, Throwable t) {
+                createAlertDialog(t.getMessage());
+            }
+        });
+    }
+
+    /**
      * Creates an AlertDialog
      *
      * @param message
@@ -185,12 +224,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     /**
      * Creates and sets the data of the user to be sent to the server
      */
-    private void setUserData() {
+    private void setUserData() throws Exception {
         user = new User();
         user.setEmail(String.valueOf(fieldEmail.getText()));
         user.setFullName(String.valueOf(fieldFullName.getText()));
         user.setUsername(String.valueOf(fieldUsername.getText()));
-        user.setPassword(String.valueOf(fieldPassword.getText()));
+        String encryptedPassword = Encryptor.encryptText(String.valueOf(fieldPassword.getText()), publicKeyBytes);
+        user.setPassword(String.valueOf(encryptedPassword));
         user.setType(UserType.USER);
     }
 

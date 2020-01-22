@@ -1,6 +1,7 @@
 package com.example.lit_fits_application.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,15 +22,21 @@ import android.widget.TextView;
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
 import com.example.lit_fits_application.clients.ExpertClientInterface;
+import com.example.lit_fits_application.clients.GarmentClientInterface;
 import com.example.lit_fits_application.entities.BodyPart;
 import com.example.lit_fits_application.entities.Color;
+import com.example.lit_fits_application.entities.Colors;
 import com.example.lit_fits_application.entities.Garment;
 import com.example.lit_fits_application.entities.Material;
+import com.example.lit_fits_application.entities.Materials;
 import com.example.lit_fits_application.entities.User;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,17 +59,25 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      */
     private TableRow tableRowToBuy;
     /**
-     * Image of the Garment to buy
+     * Table row for hats
      */
-    private ImageView imageViewToBuy;
+    private TableRow tableRowHat;
     /**
-     * Barcode of the Garment to buy
+     * Table row for tops
      */
-    private TextView textViewBarcode;
+    private TableRow tableRowTop;
     /**
-     * Price of the Garment to buy
+     * Table row for bottoms
      */
-    private TextView textViewPrice;
+    private TableRow tableRowBottom;
+    /**
+     * Table row for shoes
+     */
+    private TableRow tableRowShoes;
+    /**
+     * Table row for other
+     */
+    private TableRow tableRowOther;
     /**
      * User logged in
      */
@@ -79,6 +94,10 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Address of the server
      */
     private String uri;
+    /**
+     * The amount of garments
+     */
+    Integer amountOfGarments;
     /**
      * HashMap with the recommended Garments
      */
@@ -101,8 +120,91 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         fillColorList();
         fillMaterialList();
         fillLists();
-        // Fill table with the recommendations
-        // Fill the row to buy
+        fillTableRow(tableRowHat, BodyPart.HAT);
+        fillTableRow(tableRowTop, BodyPart.TOP);
+        fillTableRow(tableRowBottom, BodyPart.BOTTOM);
+        fillTableRow(tableRowShoes, BodyPart.SHOE);
+        fillTableRow(tableRowOther, BodyPart.OTHER);
+        getGarmentToBuy();
+    }
+
+    /**
+     * Gets a random garment to recommend the user to buy
+     */
+    private void getGarmentToBuy() {
+        // get random garment by random id
+        GarmentClientInterface garmentClientInterface = getAmountOfGarments();
+        Random random = new Random();
+        Long aux = random.nextLong(amountOfGarments.longValue() - 1) + 1;
+        getGarmentFromServer(garmentClientInterface, aux);
+    }
+
+    private void getGarmentFromServer(GarmentClientInterface garmentClientInterface, Long aux) {
+        Call<Garment> garmentCall = garmentClientInterface.findGarment(aux.toString());
+        garmentCall.enqueue(new Callback<Garment>() {
+            @Override
+            public void onResponse(Call<Garment> call, Response<Garment> response) {
+                if (response.code() == 200) {
+                    fillTableRowToBuy(response);
+                } else {
+                    createAlertDialog("Unknown Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Garment> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @NotNull
+    private GarmentClientInterface getAmountOfGarments() {
+        GarmentClientInterface garmentClientInterface = new ClientFactory().getGarmentClient(uri);
+        Call<Integer> amountOfGarmentsCall = garmentClientInterface.countREST();
+        amountOfGarmentsCall.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.code() == 200) {
+                    amountOfGarments = response.body();
+                } else {
+                    createAlertDialog("Unknown Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                createAlertDialog("Unknown Error");
+            }
+        });
+        return garmentClientInterface;
+    }
+
+    private void fillTableRowToBuy(Response<Garment> response) {
+        ImageView imageView = new ImageView(this);
+        // imageViewHat.set response.body().getPicture()
+        TextView textViewBarcode = new TextView(this);
+        textViewBarcode.setText(response.body().getBarcode());
+        TextView textViewCompany = new TextView(this);
+        textViewCompany.setText(response.body().getCompany().getFullName());
+        tableRowToBuy.addView(imageView);
+        tableRowToBuy.addView(textViewBarcode);
+        tableRowToBuy.addView(textViewCompany);
+    }
+
+    /**
+     * Fills a given table row with the data of a given garment type
+     */
+    private void fillTableRow(TableRow tableRowToFill, BodyPart bodyPart) {
+        ImageView imageView = new ImageView(this);
+        // imageViewHat.set recommendationsHashMap.get(bodyPart).getPicture()
+        TextView textViewBarcode = new TextView(this);
+        textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
+        TextView textViewCompany = new TextView(this);
+        textViewCompany.setText(recommendationsHashMap.get(bodyPart).getCompany().getFullName());
+        tableRowToFill.addView(imageView);
+        tableRowToFill.addView(textViewBarcode);
+        tableRowToFill.addView(textViewCompany);
     }
 
     /**
@@ -159,19 +261,19 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      */
     private void fillMaterialList() {
         ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
-        Call<List<Material>> call = (Call<List<Material>>) expertClientInterface.recommendedMaterials();
-        call.enqueue(new Callback<List<Material>>() {
+        Call<Materials> call = expertClientInterface.recommendedMaterials();
+        call.enqueue(new Callback<Materials>() {
             @Override
-            public void onResponse(Call<List<Material>> call, Response<List<Material>> response) {
+            public void onResponse(Call<Materials> call, Response<Materials> response) {
                 if (response.code() == 200) {
-                    trendingMaterials = response.body();
+                    trendingMaterials = response.body().getMaterials();
                 } else if (response.code() == 500) {
                     createAlertDialog("Unknown Error");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Material>> call, Throwable t) {
+            public void onFailure(Call<Materials> call, Throwable t) {
                 createAlertDialog(t.getMessage());
             }
         });
@@ -182,19 +284,19 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      */
     private void fillColorList() {
         ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
-        Call<List<Color>> call = (Call<List<Color>>) expertClientInterface.recommendedColors();
-        call.enqueue(new Callback<List<Color>>() {
+        Call<Colors> call = expertClientInterface.recommendedColors();
+        call.enqueue(new Callback<Colors>() {
             @Override
-            public void onResponse(Call<List<Color>> call, Response<List<Color>> response) {
+            public void onResponse(Call<Colors> call, Response<Colors> response) {
                 if (response.code() == 200) {
-                    trendingColors = response.body();
+                    trendingColors = response.body().getColors();
                 } else if (response.code() == 500) {
                     createAlertDialog("Unknown Error");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Color>> call, Throwable t) {
+            public void onFailure(Call<Colors> call, Throwable t) {
                 createAlertDialog(t.getMessage());
             }
         });
@@ -207,9 +309,11 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         buttonGoBack.findViewById(R.id.buttonGoBack);
         tableRecommendations.findViewById(R.id.tableRecommendations);
         tableRowToBuy.findViewById(R.id.tableRowToBuy);
-        imageViewToBuy.findViewById(R.id.imageViewToBuy);
-        textViewBarcode.findViewById(R.id.textViewBarcode);
-        textViewPrice.findViewById(R.id.textViewPrice);
+        tableRowHat.findViewById(R.id.tableRowHat);
+        tableRowTop.findViewById(R.id.tableRowTop);
+        tableRowBottom.findViewById(R.id.tableRowBottom);
+        tableRowShoes.findViewById(R.id.tableRowShoes);
+        tableRowOther.findViewById(R.id.tableRowOther);
     }
 
     @Override
