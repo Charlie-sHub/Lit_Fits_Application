@@ -196,15 +196,21 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Fills a given table row with the data of a given garment type
      */
     private void fillTableRow(TableRow tableRowToFill, BodyPart bodyPart) {
-        ImageView imageView = new ImageView(this);
-        // imageViewHat.set recommendationsHashMap.get(bodyPart).getPicture()
-        TextView textViewBarcode = new TextView(this);
-        textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
-        TextView textViewCompany = new TextView(this);
-        textViewCompany.setText(recommendationsHashMap.get(bodyPart).getCompany().getFullName());
-        tableRowToFill.addView(imageView);
-        tableRowToFill.addView(textViewBarcode);
-        tableRowToFill.addView(textViewCompany);
+        if (!recommendationsHashMap.isEmpty()) {
+            if (recommendationsHashMap.get(bodyPart) != null) {
+                ImageView imageView = new ImageView(this);
+                // imageViewHat.set recommendationsHashMap.get(bodyPart).getPicture()
+                TextView textViewBarcode = new TextView(this);
+                textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
+                TextView textViewCompany = new TextView(this);
+                textViewCompany.setText(recommendationsHashMap.get(bodyPart).getCompany().getFullName());
+                tableRowToFill.addView(imageView);
+                tableRowToFill.addView(textViewBarcode);
+                tableRowToFill.addView(textViewCompany);
+            }
+        } else {
+            createAlertDialog("Nothing to recommend, as you have no garments");
+        }
     }
 
     /**
