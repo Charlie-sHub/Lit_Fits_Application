@@ -2,7 +2,10 @@ package com.example.lit_fits_application.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -20,7 +23,7 @@ import com.example.lit_fits_application.entities.User;
  *
  * @author Asier Vila
  */
-public class TastesActivity extends AppCompatActivity {
+public class TastesActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
      * The button that the user will press to go back.
@@ -59,7 +62,7 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Finds all the objects of the activity using their id.
      */
     private void findById() {
         btnBack.findViewById(R.id.btnBack);
@@ -68,7 +71,7 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Fills the color table with all the colors that the user likes.
      */
     private void fillColorTable() {
         if (!user.getLikedColors().isEmpty()) {
@@ -81,6 +84,7 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
+     * Creates a new row for every color that receives and returns it.
      *
      * @param color
      * @return
@@ -98,7 +102,7 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Fills the material table with all the colors that the user likes.
      */
     private void fillMaterialTable() {
         if (!user.getLikedMaterials().isEmpty()) {
@@ -111,7 +115,7 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a new row for every material that receives.
+     * Creates a new row for every material that receives and returns it.
      *
      * @param material
      * @return
@@ -129,9 +133,9 @@ public class TastesActivity extends AppCompatActivity {
     }
 
     /**
+     * This method is called when a table of user tastes has not records to fill it.
      *
-     *
-     * @param tableLayout
+     * @param tableLayout The table that will be filled with the "empty information" message.
      */
     private void fillEmptyTable(TableLayout tableLayout) {
         TableRow emptyTableRow = new TableRow(this);
@@ -140,5 +144,30 @@ public class TastesActivity extends AppCompatActivity {
         emptyTextView.setText("This information is empty.");
 
         tableLayout.addView(emptyTableRow);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == btnBack.getId()) {
+            Intent mainMenuActivityIntent = new Intent(this, MainMenuActivity.class);
+            mainMenuActivityIntent.putExtra("USER", user);
+            startActivity(mainMenuActivityIntent);
+        }
+    }
+
+    /**
+     * This method opens a confirmation dialog and returns the answer as a boolean.
+     *
+     * @param message
+     * @return "True" if the answer is a confirmation, "False" if not.
+     */
+    private boolean createConfirmationDialog(String message) {
+        boolean ret = true;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message);
+        alert.show();
+
+        return ret;
     }
 }
