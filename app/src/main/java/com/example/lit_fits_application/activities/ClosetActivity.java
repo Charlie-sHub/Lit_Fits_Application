@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,32 +23,42 @@ public class ClosetActivity extends AppCompatActivity {
 
     private Button btnBack;
 
-    private TableLayout closetTable;
+    private TableLayout garmentTable;
 
     private TableRow garmentRow;
 
-    public List<Garment> garmentList;
+    private List<Garment> garmentList;
+
+    public TableLayout getGarmentTable() {
+        return this.garmentTable;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_closet);
+        
+        fillGarmentTable();
+    }
+    
+    private void fillGarmentTable() {
+        
     }
 
     protected TableRow createNewTableRow(Garment garment) {
         TableRow garmentRow = new TableRow(this);
 
-        TextView imageView = new TextView(this);
-        TextView barcodeView = new TextView(this);
+        ImageView imageView = new ImageView(this);
         TextView companyView = new TextView(this);
 
-        imageView.setText(garment.getImagePath());
-        barcodeView.setText(garment.getBarcode());
+        //imageView.setImage(garment.getImagePath());
         companyView.setText(garment.getCompany().getFullName());
 
         garmentRow.addView(imageView);
-        garmentRow.addView(barcodeView);
         garmentRow.addView(companyView);
+
+        Button deleteButton = new Button(this);
+        deleteButton.setOnClickListener(this.onDeleteButtonPress(this, garment));
 
         return garmentRow;
     }

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * The class that will be used to manage all the users data.
@@ -13,7 +11,6 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Asier 
  */
 
-@XmlRootElement
 public class User implements Serializable {
     
     protected String username;
@@ -23,7 +20,7 @@ public class User implements Serializable {
     protected String email;
     protected Date lastAccess;
     protected Date lastPasswordChange;
-    protected lit_fits_client.entities.UserType type;
+    protected UserType type;
     private Set<Color> likedColors;
     private Set<Material> likedMaterials;
     private Set<Garment> garments;
@@ -60,7 +57,7 @@ public class User implements Serializable {
     }
     
     /**
-     * Simple user constructor, used for classes that extend user
+     * Full user constructor
      * @param username The username that will be set.
      * @param fullName The full name that will be set.
      * @param password The password that that will be set.
@@ -88,7 +85,7 @@ public class User implements Serializable {
         this.likedMaterials = likedMaterials;
         this.garments = garments;
     }
-    
+
     /**
      * Gets the users username.
      * @return The username of the user.
@@ -221,7 +218,6 @@ public class User implements Serializable {
      * Gets the Set of colors that the user likes.
      * @return The Set with all the liked colors.
      */
-    @XmlTransient
     public Set<Color> getLikedColors () {
         return likedColors;
     }
@@ -263,7 +259,6 @@ public class User implements Serializable {
      * Gets the Set of materials that the user likes.
      * @return The Set with all the liked materials.
      */
-    @XmlTransient
     public Set<Material> getLikedMaterials () {
         return likedMaterials;
     }
@@ -305,7 +300,6 @@ public class User implements Serializable {
      * Gets the garments that the user has saved.
      * @return A Set with all the garments.
      */
-    @XmlTransient
     public Set<Garment> getGarments () {
         return garments;
     }

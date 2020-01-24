@@ -229,7 +229,6 @@ public class TastesActivity extends AppCompatActivity implements View.OnClickLis
                 deleteLikedMaterial(tastesActivity, rowId, material);
             }
         });
-
     }
 
     private void deleteLikedMaterial(TastesActivity tastesActivity, int rowId, Material material) {
