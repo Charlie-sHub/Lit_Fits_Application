@@ -1,5 +1,6 @@
 package com.example.lit_fits_application.clients;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -15,5 +16,5 @@ public interface PublicKeyClientInterface {
      * @return byte[]
      */
     @GET
-    Call<byte[]> getPublicKey();
+    Call<ResponseBody> getPublicKey();
 }

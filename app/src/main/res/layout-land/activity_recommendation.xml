@@ -32,24 +32,24 @@
         app:layout_constraintVertical_bias="0.035">
 
         <TableRow
-            android:id="@+id/tableRowTop"
+            android:id="@+id/tableRowHat"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageViewTop"
+                android:id="@+id/imageView"
                 android:layout_width="133dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/placeHolder" />
 
             <TextView
-                android:id="@+id/barcodeTop"
+                android:id="@+id/textViewHat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textViewHat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
