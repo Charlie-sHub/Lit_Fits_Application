@@ -136,6 +136,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         // get random garment by random id
         GarmentClientInterface garmentClientInterface = getAmountOfGarments();
         Random random = new Random();
+        // What to do?
         Long aux = random.nextLong(amountOfGarments.longValue() - 1) + 1;
         getGarmentFromServer(garmentClientInterface, aux);
     }
