@@ -19,7 +19,7 @@ import com.example.lit_fits_application.clients.ClientFactory;
 import com.example.lit_fits_application.clients.PublicKeyClientInterface;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
-import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
+// import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 import com.example.lit_fits_application.miscellaneous.Encryptor;
 
 import java.io.IOException;
@@ -273,7 +273,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "You must fill all the fields", Toast.LENGTH_SHORT).show();
         }
     }
-    
+
      */
 
     /**

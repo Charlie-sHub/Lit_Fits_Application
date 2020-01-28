@@ -58,7 +58,7 @@ public class ClosetActivity extends AppCompatActivity {
         garmentRow.addView(companyView);
 
         Button deleteButton = new Button(this);
-        deleteButton.setOnClickListener(this.onDeleteButtonPress(this, garment));
+        // deleteButton.setOnClickListener(this.onDeleteButtonPress(this, garment));
 
         return garmentRow;
     }
