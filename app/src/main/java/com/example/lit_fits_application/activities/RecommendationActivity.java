@@ -136,8 +136,11 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         // get random garment by random id
         GarmentClientInterface garmentClientInterface = getAmountOfGarments();
         Random random = new Random();
-        // What to do?
-        Long aux = random.nextLong(amountOfGarments.longValue() - 1) + 1;
+        // it's a shitty solution but there's no time for anything better
+        Long aux = random.nextLong() + 1;
+        while (aux > amountOfGarments) {
+            aux = random.nextLong();
+        }
         getGarmentFromServer(garmentClientInterface, aux);
     }
 
