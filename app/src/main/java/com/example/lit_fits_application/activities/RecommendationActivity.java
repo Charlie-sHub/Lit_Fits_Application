@@ -1,13 +1,9 @@
 package com.example.lit_fits_application.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
@@ -18,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
@@ -37,8 +35,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Activity where Garments are recommended to the User
@@ -135,7 +136,11 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         // get random garment by random id
         GarmentClientInterface garmentClientInterface = getAmountOfGarments();
         Random random = new Random();
-        Long aux = random.nextLong(amountOfGarments.longValue() - 1) + 1;
+        // it's a shitty solution but there's no time for anything better
+        Long aux = random.nextLong() + 1;
+        while (aux > amountOfGarments) {
+            aux = random.nextLong();
+        }
         getGarmentFromServer(garmentClientInterface, aux);
     }
 
@@ -182,7 +187,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
 
     private void fillTableRowToBuy(Response<Garment> response) {
         ImageView imageView = new ImageView(this);
-        // imageViewHat.set response.body().getPicture()
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(response.body().getPicture(), 0, response.body().getPicture().length);
+        imageView.setImageBitmap(imageBitmap);
         TextView textViewBarcode = new TextView(this);
         textViewBarcode.setText(response.body().getBarcode());
         TextView textViewCompany = new TextView(this);
@@ -199,7 +205,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         if (!recommendationsHashMap.isEmpty()) {
             if (recommendationsHashMap.get(bodyPart) != null) {
                 ImageView imageView = new ImageView(this);
-                // imageViewHat.set recommendationsHashMap.get(bodyPart).getPicture()
+                Bitmap imageBitmap = BitmapFactory.decodeByteArray(recommendationsHashMap.get(bodyPart).getPicture(), 0, recommendationsHashMap.get(bodyPart).getPicture().length);
+                imageView.setImageBitmap(imageBitmap);
                 TextView textViewBarcode = new TextView(this);
                 textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
                 TextView textViewCompany = new TextView(this);
