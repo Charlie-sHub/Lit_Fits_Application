@@ -15,6 +15,6 @@ public interface PublicKeyClientInterface {
      *
      * @return byte[]
      */
-    @GET
+    @GET("litfitsserver.encryption.publicKey")
     Call<ResponseBody> getPublicKey();
 }

@@ -83,6 +83,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         findViews();
@@ -90,7 +91,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         uri = getResources().getString(R.string.uri);
         textFields = new ArrayList<>();
         addFieldsToArray();
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
     }
@@ -142,11 +142,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                         break;
                     }
                 }
-                if (fieldPassword.getText().equals(fieldConfirmPassword.getText()) && filledFields) {
+                if (fieldPassword.getText().toString().trim().equals(fieldConfirmPassword.getText().toString().trim()) && filledFields) {
                     getPublicKey();
                     setUserData();
                     registerUser();
-                } else if (!fieldPassword.getText().equals(fieldConfirmPassword.getText())) {
+                } else if (!fieldPassword.getText().toString().trim().equals(fieldConfirmPassword.getText().toString().trim())) {
                     createAlertDialog("Passwords don't match");
                     fieldConfirmPassword.requestFocus();
                 } else if (!filledFields) {

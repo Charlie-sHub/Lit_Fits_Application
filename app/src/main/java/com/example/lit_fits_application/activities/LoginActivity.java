@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.app_soundtrack);
@@ -88,7 +89,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textFields = new ArrayList<>();
         addFieldsToArray();
         // Setting the transitions
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
     }
 
@@ -133,7 +133,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else if (view.getId() == btnRegister.getId()) {
                 onBtnRegisterPress();
             }
-
         } catch (Exception e) {
             createAlertDialog(e.getMessage());
         }

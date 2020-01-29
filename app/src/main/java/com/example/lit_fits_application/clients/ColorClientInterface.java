@@ -26,7 +26,7 @@ public interface ColorClientInterface {
      *
      * @return int
      */
-    @GET("count")
+    @GET("litfitsserver.entities.color/count")
     Call<Integer> count();
 
     /**
@@ -34,7 +34,7 @@ public interface ColorClientInterface {
      *
      * @param color
      */
-    @POST
+    @POST("litfitsserver.entities.color")
     Call<Void> create(@Body Color color);
 
     /**
@@ -42,7 +42,7 @@ public interface ColorClientInterface {
      *
      * @param color
      */
-    @PUT
+    @PUT("litfitsserver.entities.color")
     Call<Void> edit(@Body Color color);
 
     /**
@@ -51,7 +51,7 @@ public interface ColorClientInterface {
      * @param name
      * @return Color
      */
-    @GET("{name}")
+    @GET("litfitsserver.entities.color/{name}")
     Call<Color> find(@Path("name") String name);
 
     /**
@@ -59,7 +59,7 @@ public interface ColorClientInterface {
      *
      * @return List of Colors
      */
-    @GET
+    @GET("litfitsserver.entities.color")
     Call<Colors> findAll();
 
     /**
@@ -67,6 +67,6 @@ public interface ColorClientInterface {
      *
      * @param name
      */
-    @DELETE("{name}")
+    @DELETE("litfitsserver.entities.color/{name}")
     Call<Void> remove(@Path("name")String name);
 }

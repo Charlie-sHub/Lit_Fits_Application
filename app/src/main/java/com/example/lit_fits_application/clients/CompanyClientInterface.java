@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 
 /**
  * Interface for the companyClient
- * Probably useless for the app
+ * Probably useless for the app but i made it just in case
  * @author Carlos Mendez
  */
 public interface CompanyClientInterface {
@@ -27,7 +27,7 @@ public interface CompanyClientInterface {
      *
      * @return String
      */
-    @GET("count")
+    @GET("litfitsserver.entities.company/count")
     Call<Integer> countREST();
 
     /**
@@ -35,7 +35,7 @@ public interface CompanyClientInterface {
      *
      * @param company
      */
-    @POST
+    @POST("litfitsserver.entities.company")
     Call<Void> create(@Body Company company);
 
     /**
@@ -43,7 +43,7 @@ public interface CompanyClientInterface {
      *
      * @param company
      */
-    @PUT
+    @PUT("litfitsserver.entities.company")
     Call<Void> edit(@Body Company company);
 
     /**
@@ -52,7 +52,7 @@ public interface CompanyClientInterface {
      * @param id
      * @return Company
      */
-    @GET("{id}")
+    @GET("litfitsserver.entities.company/{id}")
     Call<Company> find(@Path("id") String id);
 
     /**
@@ -60,7 +60,7 @@ public interface CompanyClientInterface {
      *
      * @return List of Companies
      */
-    @GET
+    @GET("litfitsserver.entities.company")
     Call<Companies> findAll();
 
     /**
@@ -69,7 +69,7 @@ public interface CompanyClientInterface {
      * @param nif
      * @return Company
      */
-    @GET("company/{nif}")
+    @GET("litfitsserver.entities.company/company/{nif}")
     Call<Company> findCompanyByNif(@Path("nif") String nif);
 
     /**
@@ -78,7 +78,7 @@ public interface CompanyClientInterface {
      * @param company
      * @return Company
      */
-    @POST("login/")
+    @POST("litfitsserver.entities.company/login")
     Call<Company> login(@Body Company company);
 
     /**
@@ -86,7 +86,7 @@ public interface CompanyClientInterface {
      *
      * @param nif
      */
-    @GET("passwordReestablishment/{nif}")
+    @GET("litfitsserver.entities.company/passwordReestablishment/{nif}")
     Call<Void> reestablishPassword(@Path("nif")String nif);
 
     /**
@@ -94,7 +94,7 @@ public interface CompanyClientInterface {
      *
      * @param id
      */
-    @DELETE("{id}")
+    @DELETE("litfitsserver.entities.company/{id}")
     Call<Void> remove(@Path("id")String id);
 
 }

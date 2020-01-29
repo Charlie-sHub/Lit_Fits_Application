@@ -107,6 +107,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommendation);
         findById();
@@ -115,7 +116,6 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
         uri = getResources().getString(R.string.uri);
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
         fillColorList();

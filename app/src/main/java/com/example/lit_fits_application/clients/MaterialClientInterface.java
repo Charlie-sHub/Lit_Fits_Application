@@ -26,7 +26,7 @@ public interface MaterialClientInterface {
      *
      * @return int
      */
-    @GET("count")
+    @GET("litfitsserver.entities.material/count")
     Call<Integer> count();
 
     /**
@@ -34,7 +34,7 @@ public interface MaterialClientInterface {
      *
      * @param Material
      */
-    @POST
+    @POST("litfitsserver.entities.material")
     Call<Void> create(@Body Material Material);
 
     /**
@@ -42,7 +42,7 @@ public interface MaterialClientInterface {
      *
      * @param Material
      */
-    @PUT
+    @PUT("litfitsserver.entities.material")
     Call<Void> edit(@Body Material Material);
 
     /**
@@ -51,7 +51,7 @@ public interface MaterialClientInterface {
      * @param name
      * @return Material
      */
-    @GET("{name}")
+    @GET("litfitsserver.entities.material/{name}")
     Call<Material> find(@Path("name") String name);
 
     /**
@@ -59,7 +59,7 @@ public interface MaterialClientInterface {
      *
      * @return List of Materials
      */
-    @GET
+    @GET("litfitsserver.entities.material")
     Call<Materials> findAll();
 
     /**
@@ -67,6 +67,6 @@ public interface MaterialClientInterface {
      *
      * @param name
      */
-    @DELETE("{name}")
+    @DELETE("litfitsserver.entities.material/{name}")
     Call<Void> remove(@Path("name")String name);
 }

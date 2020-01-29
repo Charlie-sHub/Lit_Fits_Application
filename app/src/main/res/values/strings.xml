@@ -1,6 +1,6 @@
 <resources>
     <!-- activity_login -->
-    <string name="app_name" translatable="false">Lit_Fits_Application</string>
+    <string name="app_name" translatable="false">Lit Fits</string>
     <string name="lbl_title" translatable="false">Lit Fits</string>
     <string name="lbl_user_name">Username:</string>
     <string name="lbl_password">Password:</string>

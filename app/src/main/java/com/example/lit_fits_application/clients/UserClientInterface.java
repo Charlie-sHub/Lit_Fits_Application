@@ -25,7 +25,7 @@ public interface UserClientInterface {
      * @param username The username for the user that will be selected.
      * @return The user with all the data.
      */
-    @GET("{id}")
+    @GET("litfitsserver.entities.user/{id}")
     Call<User> findUser(@Path("id") String username);
 
     /**
@@ -33,7 +33,7 @@ public interface UserClientInterface {
      *
      * @param username The username for the user that will be removed.
      */
-    @DELETE("{id}")
+    @DELETE("litfitsserver.entities.user/{id}")
     Call<ResponseBody> removeUser(@Path("id") String username);
 
     /**
@@ -42,7 +42,7 @@ public interface UserClientInterface {
      * @param email The email that will be used to filter.
      * @return The user with all the data.
      */
-    @GET("user/{email}")
+    @GET("litfitsserver.entities.user/user/{email}")
     Call<User> findUserByEmail(@Path("email") String email);
 
     /**
@@ -50,7 +50,7 @@ public interface UserClientInterface {
      *
      * @return All the users with their data.
      */
-    @GET
+    @GET("litfitsserver.entities.user")
     Call<List<User>> findAllUser();
 
     /**
@@ -58,7 +58,7 @@ public interface UserClientInterface {
      *
      * @param user
      */
-    @PUT
+    @PUT("litfitsserver.entities.user")
     Call<Void> editUser(@Body User user);
 
     /**
@@ -66,7 +66,7 @@ public interface UserClientInterface {
      *
      * @param user
      */
-    @POST
+    @POST("litfitsserver.entities.user")
     Call<Void> createUser(@Body User user);
 
     /**
@@ -74,7 +74,7 @@ public interface UserClientInterface {
      *
      * @return
      */
-    @GET("count")
+    @GET("litfitsserver.entities.user/count")
     Call<Integer> countRESTUser();
 
     /**
@@ -83,7 +83,7 @@ public interface UserClientInterface {
      * @param user
      * @return User
      */
-    @POST("login/")
+    @POST("litfitsserver.entities.user/login")
     Call<User> login(@Body User user);
 
     /**

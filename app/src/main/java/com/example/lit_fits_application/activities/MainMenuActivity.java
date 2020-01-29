@@ -48,6 +48,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         findButtons();
@@ -55,7 +56,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
     }

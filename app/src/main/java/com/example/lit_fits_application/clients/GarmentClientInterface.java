@@ -26,19 +26,19 @@ public interface GarmentClientInterface {
     /**
      * Counts the total amount of garments
      */
-    @GET("count")
+    @GET("litfitsserver.entities.garment/count")
     Call<Integer> countREST();
 
     /**
      * Creates a new garment
      */
-    @POST
+    @POST("litfitsserver.entities.garment")
     Call<Void> createGarment(@Body Garment garment);
 
     /**
      * Updates a garment with the data send
      */
-    @PUT
+    @PUT("litfitsserver.entities.garment")
     Call<Void> editGarment(@Body Garment garment);
 
     /**
@@ -47,7 +47,7 @@ public interface GarmentClientInterface {
      * @param id
      * @return Garment
      */
-    @GET("{id}")
+    @GET("litfitsserver.entities.garment/{id}")
     Call<Garment> findGarment(@Path("id") String id);
 
     /**
@@ -55,7 +55,7 @@ public interface GarmentClientInterface {
      *
      * @return List of Garments
      */
-    @GET
+    @GET("litfitsserver.entities.garment")
     Call<Garments> findGarmentAll();
 
     /**
@@ -64,7 +64,7 @@ public interface GarmentClientInterface {
      * @param barcode
      * @return Garment
      */
-    @GET("barcode/{barcode}")
+    @GET("litfitsserver.entities.garment/barcode/{barcode}")
     Call<Garment> findGarmentGarmentByBarcode(@Path("barcode") String barcode);
 
     /**
@@ -73,7 +73,7 @@ public interface GarmentClientInterface {
      * @param nif
      * @return List of Garments
      */
-    @GET("company/{nif}")
+    @GET("litfitsserver.entities.garment/company/{nif}")
     Call<Garments> findGarmentGarmentsByCompany(@Path("nif") String nif);
 
     /**
@@ -82,7 +82,7 @@ public interface GarmentClientInterface {
      * @param requested
      * @return List of Garments
      */
-    @GET("request/{requested}")
+    @GET("litfitsserver.entities.garment/request/{requested}")
     Call<Garments> findGarmentGarmentsByRequest(@Path("requested") String requested);
 
     /**
@@ -91,7 +91,7 @@ public interface GarmentClientInterface {
      * @param promoted
      * @return List of Garments
      */
-    @GET("promotion/{promoted}")
+    @GET("litfitsserver.entities.garment/promotion/{promoted}")
     Call<Garments> findGarmentGarmentsPromoted(@Path("promoted") String promoted);
 
     /**
@@ -100,7 +100,7 @@ public interface GarmentClientInterface {
      * @param id
      * @return FIle
      */
-    @GET("picture/{id}")
+    @GET("litfitsserver.entities.garment/picture/{id}")
     Call<File> getImage(@Path("id")String id);
 
     /**
@@ -108,6 +108,6 @@ public interface GarmentClientInterface {
      *
      * @param id
      */
-    @DELETE("{id}")
+    @DELETE("litfitsserver.entities.garment/{id}")
     Call<Void> remove(@Path("id") String id);
 }

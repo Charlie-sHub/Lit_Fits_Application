@@ -27,7 +27,7 @@ public interface ExpertClientInterface {
      *
      * @param fashionExpert
      */
-    @POST
+    @POST("litfitsserver.entities.fashionexpert")
     Call<Void> create(@Body FashionExpert fashionExpert);
 
     /**
@@ -35,7 +35,7 @@ public interface ExpertClientInterface {
      *
      * @param fashionExpert
      */
-    @PUT
+    @PUT("litfitsserver.entities.fashionexpert")
     Call<Void> edit(@Body FashionExpert fashionExpert);
 
 
@@ -45,7 +45,7 @@ public interface ExpertClientInterface {
      * @param id
      * @return FashionExpert
      */
-    @GET
+    @GET("litfitsserver.entities.fashionexpert/{id}")
     Call<FashionExpert> find(@Path("id") String id);
 
     /**
@@ -53,7 +53,7 @@ public interface ExpertClientInterface {
      *
      * @param username
      */
-    @GET
+    @GET("litfitsserver.entities.fashionexpert/passwordReestablishment/{id}")
     Call<Void> reestablishPassword(@Path("username") String username);
 
     /**
@@ -61,7 +61,7 @@ public interface ExpertClientInterface {
      *
      * @param id
      */
-    @DELETE
+    @DELETE("litfitsserver.entities.fashionexpert/{id}")
     Call<Void> remove(@Path("id") String id);
 
     /**
@@ -71,7 +71,7 @@ public interface ExpertClientInterface {
      * @param fashionExpert
      * @return FashionExpert
      */
-    @POST("login/")
+    @POST("litfitsserver.entities.fashionexpert/login")
     Call<FashionExpert> login(@Body FashionExpert fashionExpert);
     /* Yet to implement the get all recommended colors and materials */
 
@@ -79,13 +79,13 @@ public interface ExpertClientInterface {
      * Finds all the colors recommended by experts
      * @return List of Colors
      */
-    @GET
+    @GET("litfitsserver.entities.fashionexpert/colors")
     Call<Colors> recommendedColors();
 
     /**
      * Finds all the materials recommended by experts
      * @return List of Material
      */
-    @GET
+    @GET("litfitsserver.entities.fashionexpert/materials")
     Call<Materials> recommendedMaterials();
 }
