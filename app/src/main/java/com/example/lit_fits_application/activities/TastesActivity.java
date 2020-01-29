@@ -261,7 +261,11 @@ public class TastesActivity extends AppCompatActivity implements View.OnClickLis
         } );
     }
 
-
+    /**
+     * Creates an alert dialog with the received message.
+     *
+     * @param message A string with the message.
+     */
     private void createAlertDialog(String message) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage(message);
