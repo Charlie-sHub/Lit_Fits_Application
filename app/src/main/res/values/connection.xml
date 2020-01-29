@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="uri" translatable="false">http://HZ341342:8080/Lit_Fits_Server/webresources/</string>
+    <string name="uri" translatable="false">http://HZ341342.TartangaLH.eus:8080/Lit_Fits_Server/webresources/</string>
 </resources>

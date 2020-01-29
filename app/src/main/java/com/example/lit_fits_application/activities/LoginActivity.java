@@ -20,6 +20,7 @@ import com.example.lit_fits_application.clients.PublicKeyClientInterface;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
 // import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
+import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 import com.example.lit_fits_application.miscellaneous.Encryptor;
 
 import java.io.IOException;
@@ -183,7 +184,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
-                    // registerUser();
+                    registerUser();
                     openMainMenu(response);
                 } else if (response.code() == 404) {
                     createAlertDialog("User not found");
@@ -255,7 +256,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Saves the username and password of the User in a database so the app "remembers" the password
      */
-    /*
     public void registerUser() {
         // What database file?
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
@@ -273,12 +273,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-     */
-
     /**
      * Looks for the password of the User
      */
-    /*
+
     public void searchUser() {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
@@ -297,8 +295,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-     */
-
     /**
      * Checks when the focus changes and acts accordingly
      *
@@ -308,7 +304,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
         if (view.getId() == fieldPassword.getId()) {
-            // searchUser();
+            searchUser();
         }
     }
 }

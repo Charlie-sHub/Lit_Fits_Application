@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.entities.UserType;
 import com.example.lit_fits_application.miscellaneous.Encryptor;
 
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import okhttp3.ResponseBody;
@@ -197,7 +199,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             @Override
             public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
                 try {
-                    publicKeyBytes = response.body().bytes();
+                    InputStream publicKeyByteInputStream = response.body().byteStream();
+                    publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
+                    createAlertDialog("Response Body: " + response.body());
+                    createAlertDialog("Response Body Bytes: " + response.body().bytes());
                 } catch (IOException e) {
                     createAlertDialog("Server Error");
                 }
