@@ -23,7 +23,10 @@ import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 import com.example.lit_fits_application.miscellaneous.Encryptor;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -210,7 +213,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
                 try {
-                    publicKeyBytes = response.body().bytes();
+                    InputStream publicKeyByteInputStream = response.body().byteStream();
+                    publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
                 } catch (IOException e) {
                     createAlertDialog("Server Error");
                 }

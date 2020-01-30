@@ -201,8 +201,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 try {
                     InputStream publicKeyByteInputStream = response.body().byteStream();
                     publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
-                    createAlertDialog("Response Body: " + response.body());
-                    createAlertDialog("Response Body Bytes: " + response.body().bytes());
                 } catch (IOException e) {
                     createAlertDialog("Server Error");
                 }
