@@ -214,6 +214,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
                 tableRowToFill.addView(imageView);
                 tableRowToFill.addView(textViewBarcode);
                 tableRowToFill.addView(textViewCompany);
+                tableRecommendations.addView(tableRowToFill);
             }
         } else {
             createAlertDialog("Nothing to recommend, as you have no garments");
@@ -319,14 +320,9 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Assigns the elements
      */
     private void findById() {
-        buttonGoBack.findViewById(R.id.buttonGoBack);
-        tableRecommendations.findViewById(R.id.tableRecommendations);
-        tableRowToBuy.findViewById(R.id.tableRowToBuy);
-        tableRowHat.findViewById(R.id.tableRowHat);
-        tableRowTop.findViewById(R.id.tableRowTop);
-        tableRowBottom.findViewById(R.id.tableRowBottom);
-        tableRowShoes.findViewById(R.id.tableRowShoes);
-        tableRowOther.findViewById(R.id.tableRowOther);
+        buttonGoBack = findViewById(R.id.buttonGoBack);
+        tableRecommendations = findViewById(R.id.tableRecommendations);
+        tableRowToBuy = findViewById(R.id.tableRowToBuy);
     }
 
     @Override

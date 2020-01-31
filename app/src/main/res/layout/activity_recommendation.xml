@@ -25,33 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TableRow
-            android:id="@+id/tableRowHat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TableRow
-            android:id="@+id/tableRowTop"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TableRow
-            android:id="@+id/tableRowBottom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TableRow
-            android:id="@+id/tableRowShoes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TableRow
-            android:id="@+id/tableRowOther"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </TableLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TableRow
         android:id="@+id/tableRowToBuy"
