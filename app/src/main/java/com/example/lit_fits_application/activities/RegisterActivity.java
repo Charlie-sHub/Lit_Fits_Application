@@ -95,6 +95,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         addFieldsToArray();
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
+        getPublicKey();
     }
 
     /**
@@ -145,7 +146,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     }
                 }
                 if (fieldPassword.getText().toString().trim().equals(fieldConfirmPassword.getText().toString().trim()) && filledFields) {
-                    getPublicKey();
                     setUserData();
                     registerUser();
                 } else if (!fieldPassword.getText().toString().trim().equals(fieldConfirmPassword.getText().toString().trim())) {
@@ -179,6 +179,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     openMainMenu(user);
                 } else if (response.code() == 500) {
                     createAlertDialog("Unknown Error");
+                } else {
+                    createAlertDialog(String.valueOf(response.code()) + " Error");
                 }
             }
 
@@ -198,12 +200,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         publicKeyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
-                try {
-                    InputStream publicKeyByteInputStream = response.body().byteStream();
-                    publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
-                } catch (IOException e) {
-                    createAlertDialog("Server Error");
-                }
+                assignPublicKeyBytes(response);
             }
 
             @Override
@@ -211,6 +208,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 createAlertDialog(t.getMessage());
             }
         });
+    }
+
+    private void assignPublicKeyBytes(Response<ResponseBody> response) {
+        try {
+            InputStream publicKeyByteInputStream = response.body().byteStream();
+            publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
+        } catch (IOException e) {
+            createAlertDialog("Server Error");
+        }
     }
 
     /**

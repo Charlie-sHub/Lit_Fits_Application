@@ -58,7 +58,7 @@ public interface UserClientInterface {
      *
      * @param user
      */
-    @PUT("litfitsserver.entities.user")
+    @PUT("litfitsserver.entities.user/edit/{username}")
     Call<Void> editUser(@Body User user);
 
     /**
@@ -66,7 +66,7 @@ public interface UserClientInterface {
      *
      * @param user
      */
-    @POST("litfitsserver.entities.user")
+    @POST("litfitsserver.entities.user/createuser")
     Call<Void> createUser(@Body User user);
 
     /**

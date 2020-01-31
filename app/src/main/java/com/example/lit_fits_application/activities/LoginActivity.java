@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         addFieldsToArray();
         // Setting the transitions
         getWindow().setExitTransition(new Explode());
+        getPublicKey();
     }
 
     /**
@@ -166,7 +167,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         // If the fields are all filled then the login attempt can continue
         if (filledFields) {
-            getPublicKey();
             setUserLoginData();
             loginUser();
         } else {
