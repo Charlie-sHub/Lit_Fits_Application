@@ -175,7 +175,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.code() == 200) {
+                if (response.code() == 204) {
                     openMainMenu(user);
                 } else if (response.code() == 500) {
                     createAlertDialog("Unknown Error");

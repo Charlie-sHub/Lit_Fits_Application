@@ -212,12 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         publicKeyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> responseBodyCall, Response<ResponseBody> response) {
-                try {
-                    InputStream publicKeyByteInputStream = response.body().byteStream();
-                    publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
-                } catch (IOException e) {
-                    createAlertDialog("Server Error");
-                }
+                assignPublicKeyBytes(response);
             }
 
             @Override
@@ -225,6 +220,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 createAlertDialog(t.getMessage());
             }
         });
+    }
+
+    private void assignPublicKeyBytes(Response<ResponseBody> response) {
+        try {
+            InputStream publicKeyByteInputStream = response.body().byteStream();
+            publicKeyBytes = IOUtils.toByteArray(publicKeyByteInputStream);
+        } catch (IOException e) {
+            createAlertDialog("Server Error");
+        }
     }
 
     /**
