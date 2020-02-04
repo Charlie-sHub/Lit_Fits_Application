@@ -14,12 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.clients.ClientFactory;
 import com.example.lit_fits_application.clients.PublicKeyClientInterface;
 import com.example.lit_fits_application.clients.UserClientInterface;
 import com.example.lit_fits_application.entities.User;
-// import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 import com.example.lit_fits_application.miscellaneous.Encryptor;
 
@@ -30,12 +31,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+
+// import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
 
 /**
  * Activity to login, where the app starts
@@ -265,7 +266,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Saves the username and password of the User in a database so the app "remembers" the password
      */
     public void registerUser() {
-        // What database file?
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
         String username = fieldUsername.getText().toString();
@@ -284,7 +284,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Looks for the password of the User
      */
-
     public void searchUser() {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "Administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();

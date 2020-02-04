@@ -22,17 +22,21 @@
         android:layout_width="333dp"
         android:layout_height="394dp"
         android:layout_marginTop="36dp"
+        android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TableRow
         android:id="@+id/tableRowToBuy"
         android:layout_width="332dp"
         android:layout_height="78dp"
+        android:background="@android:color/darker_gray"
+        android:backgroundTint="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/buttonGoBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRecommendations"/>
+        app:layout_constraintTop_toBottomOf="@+id/tableRecommendations" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

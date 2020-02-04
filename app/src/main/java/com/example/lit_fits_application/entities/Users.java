@@ -4,12 +4,13 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Root(name = "users")
 public class Users implements Serializable {
     @ElementList(data = false, empty = true, inline = true, name = "user", required = false)
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public Users() {
     }
