@@ -1,8 +1,12 @@
 package com.example.lit_fits_application.entities;
 
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,7 +15,7 @@ import java.util.Set;
  *
  * @author Asier
  */
-
+@Root(name = "user")
 public class User implements Serializable {
 
     protected String username;
@@ -22,15 +26,18 @@ public class User implements Serializable {
     protected String lastAccess;
     protected String lastPasswordChange;
     protected UserType type;
-    private Colors likedColors;
-    private Materials likedMaterials;
-    private Garments garments;
+    @ElementList(name = "colors", inline = true)
+    private Set<Color> likedColors;
+    @ElementList(name = "materials", inline = true)
+    private Set<Material> likedMaterials;
+    @ElementList(name = "garments", inline = true)
+    private Set<Garment> garments;
 
     /**
      * Empty constructor
      */
     public User() {
-
+        garments = new HashSet<>();
     }
 
     /**
@@ -74,7 +81,7 @@ public class User implements Serializable {
      */
     public User(String username, String fullName, String password, String phoneNumber,
                 String email, String lastAccess, String lastPasswordChange, UserType type,
-                Colors likedColors, Materials likedMaterials, Garments garments) {
+                Set<Color> likedColors, Set<Material> likedMaterials, Set<Garment> garments) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
@@ -251,7 +258,7 @@ public class User implements Serializable {
      *
      * @return The Set with all the liked colors.
      */
-    public Colors getLikedColors() {
+    public Set<Color> getLikedColors() {
         return likedColors;
     }
 
@@ -260,7 +267,7 @@ public class User implements Serializable {
      *
      * @param likedColors The colors Set that will be saved for the user.
      */
-    public void setLikedColors(Colors likedColors) {
+    public void setLikedColors(Set<Color> likedColors) {
         this.likedColors = likedColors;
     }
 
@@ -273,9 +280,7 @@ public class User implements Serializable {
      */
     public void addLikedColor(Color color) {
 
-        if (!this.likedColors.getColors().contains(color)) {
-            this.likedColors.getColors().add(color);
-        }
+        this.likedColors.add(color);
     }
 
     /**
@@ -286,9 +291,7 @@ public class User implements Serializable {
      */
     public void removeLikedColor(Color color) {
 
-        if (this.likedColors.getColors().contains(color)) {
-            this.likedColors.getColors().remove(color);
-        }
+        this.likedColors.remove(color);
     }
 
     /**
@@ -296,7 +299,7 @@ public class User implements Serializable {
      *
      * @return The Set with all the liked materials.
      */
-    public Materials getLikedMaterials() {
+    public Set<Material> getLikedMaterials() {
         return likedMaterials;
     }
 
@@ -305,7 +308,7 @@ public class User implements Serializable {
      *
      * @param likedMaterials The materials Set that will be saved for the user.
      */
-    public void setLikedMaterials(Materials likedMaterials) {
+    public void setLikedMaterials(Set<Material> likedMaterials) {
         this.likedMaterials = likedMaterials;
     }
 
@@ -318,9 +321,7 @@ public class User implements Serializable {
      */
     public void addLikedMaterial(Material material) {
 
-        if (!this.likedMaterials.getMaterials().contains(material)) {
-            this.likedMaterials.getMaterials().add(material);
-        }
+        this.likedMaterials.add(material);
     }
 
     /**
@@ -331,9 +332,7 @@ public class User implements Serializable {
      */
     public void removeLikedMaterial(Material material) {
 
-        if (this.likedMaterials.getMaterials().contains(material)) {
-            this.likedMaterials.getMaterials().remove(material);
-        }
+        this.likedMaterials.remove(material);
     }
 
     /**
@@ -341,7 +340,7 @@ public class User implements Serializable {
      *
      * @return A Set with all the garments.
      */
-    public Garments getGarments() {
+    public Set<Garment> getGarments() {
         return garments;
     }
 
@@ -350,7 +349,7 @@ public class User implements Serializable {
      *
      * @param garments The garments that will be saved for this user.
      */
-    public void setGarments(Garments garments) {
+    public void setGarments(Set<Garment> garments) {
         this.garments = garments;
     }
 
@@ -397,11 +396,7 @@ public class User implements Serializable {
             return false;
         }
 
-        if (!casted.getPhoneNumber().equals(this.phoneNumber)) {
-            return false;
-        }
-
-        return true;
+        return casted.getPhoneNumber().equals(this.phoneNumber);
     }
 
     /**

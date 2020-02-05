@@ -1,16 +1,17 @@
 package com.example.lit_fits_application.entities;
 
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-import java.io.File;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * Garment entity
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @Root(name="garment")
 public class Garment implements Serializable {
@@ -23,6 +24,9 @@ public class Garment implements Serializable {
      * Unique barcode identifier of the garment
      */
     private String barcode;
+    /**
+     * The name of the picture
+     */
     private String namePicture;
     /**
      * The person that designed the garment
@@ -67,11 +71,13 @@ public class Garment implements Serializable {
     /**
      * What colors are in the garment
      */
-    private Colors colors;
+    @ElementList(name = "colors", inline = true)
+    private Set<Color> colors;
     /**
      * What materials is the garment made out of
      */
-    private Materials materials;
+    @ElementList(name = "materials", inline = true)
+    private Set<Material> materials;
     /**
      * The picture of the garment
      */
@@ -82,6 +88,8 @@ public class Garment implements Serializable {
      * Empty constructor
      */
     public Garment() {
+        colors = new HashSet<>();
+        materials = new HashSet<>();
     }
 
     /**
@@ -101,7 +109,7 @@ public class Garment implements Serializable {
      * @param materials
      * @param picture
      */
-    public Garment(String barcode, String namePicture, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Colors colors, Materials materials, byte[] picture) {
+    public Garment(String barcode, String namePicture, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, byte[] picture) {
         this.barcode = barcode;
         this.namePicture = namePicture;
         this.designer = designer;
@@ -215,19 +223,19 @@ public class Garment implements Serializable {
         this.company = company;
     }
 
-    public Colors getColors() {
+    public Set<Color> getColors() {
         return this.colors;
     }
 
-    public void setColors(Colors colors) {
+    public void setColors(Set<Color> colors) {
         this.colors = colors;
     }
 
-    public Materials getMaterials() {
+    public Set<Material> getMaterials() {
         return this.materials;
     }
 
-    public void setMaterials(Materials materials) {
+    public void setMaterials(Set<Material> materials) {
         this.materials = materials;
     }
 
