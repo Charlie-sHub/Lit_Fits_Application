@@ -17,4 +17,9 @@
     <string name="lbl_no_account">No tienes cuenta?</string>
     <string name="lbl_password">Contraseña:</string>
     <string name="lbl_user_name">Nombre de usuario:</string>
+    <!-- Activity Modify Account @author Ander-->
+    <string name="btn_Save">Guardar</string>
+    <string name="txtModifyAccount">Modificar Cuenta</string>
+    <string name="field_NewPassword">Nueva Contraseña</string>
+
 </resources>

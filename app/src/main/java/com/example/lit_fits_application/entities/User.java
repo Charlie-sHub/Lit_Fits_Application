@@ -22,9 +22,9 @@ public class User implements Serializable {
     protected String lastAccess;
     protected String lastPasswordChange;
     protected UserType type;
-    private Set<Color> likedColors;
-    private Set<Material> likedMaterials;
-    private Set<Garment> garments;
+    private Colors likedColors;
+    private Materials likedMaterials;
+    private Garments garments;
 
     /**
      * Empty constructor
@@ -74,7 +74,7 @@ public class User implements Serializable {
      */
     public User(String username, String fullName, String password, String phoneNumber,
                 String email, String lastAccess, String lastPasswordChange, UserType type,
-                Set<Color> likedColors, Set<Material> likedMaterials, Set<Garment> garments) {
+                Colors likedColors, Materials likedMaterials, Garments garments) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
@@ -251,7 +251,7 @@ public class User implements Serializable {
      *
      * @return The Set with all the liked colors.
      */
-    public Set<Color> getLikedColors() {
+    public Colors getLikedColors() {
         return likedColors;
     }
 
@@ -260,7 +260,7 @@ public class User implements Serializable {
      *
      * @param likedColors The colors Set that will be saved for the user.
      */
-    public void setLikedColors(Set<Color> likedColors) {
+    public void setLikedColors(Colors likedColors) {
         this.likedColors = likedColors;
     }
 
@@ -273,8 +273,8 @@ public class User implements Serializable {
      */
     public void addLikedColor(Color color) {
 
-        if (!this.likedColors.contains(color)) {
-            this.likedColors.add(color);
+        if (!this.likedColors.getColors().contains(color)) {
+            this.likedColors.getColors().add(color);
         }
     }
 
@@ -286,8 +286,8 @@ public class User implements Serializable {
      */
     public void removeLikedColor(Color color) {
 
-        if (this.likedColors.contains(color)) {
-            this.likedColors.remove(color);
+        if (this.likedColors.getColors().contains(color)) {
+            this.likedColors.getColors().remove(color);
         }
     }
 
@@ -296,7 +296,7 @@ public class User implements Serializable {
      *
      * @return The Set with all the liked materials.
      */
-    public Set<Material> getLikedMaterials() {
+    public Materials getLikedMaterials() {
         return likedMaterials;
     }
 
@@ -305,7 +305,7 @@ public class User implements Serializable {
      *
      * @param likedMaterials The materials Set that will be saved for the user.
      */
-    public void setLikedMaterials(Set<Material> likedMaterials) {
+    public void setLikedMaterials(Materials likedMaterials) {
         this.likedMaterials = likedMaterials;
     }
 
@@ -318,8 +318,8 @@ public class User implements Serializable {
      */
     public void addLikedMaterial(Material material) {
 
-        if (!this.likedMaterials.contains(material)) {
-            this.likedMaterials.add(material);
+        if (!this.likedMaterials.getMaterials().contains(material)) {
+            this.likedMaterials.getMaterials().add(material);
         }
     }
 
@@ -331,8 +331,8 @@ public class User implements Serializable {
      */
     public void removeLikedMaterial(Material material) {
 
-        if (this.likedMaterials.contains(material)) {
-            this.likedMaterials.remove(material);
+        if (this.likedMaterials.getMaterials().contains(material)) {
+            this.likedMaterials.getMaterials().remove(material);
         }
     }
 
@@ -341,7 +341,7 @@ public class User implements Serializable {
      *
      * @return A Set with all the garments.
      */
-    public Set<Garment> getGarments() {
+    public Garments getGarments() {
         return garments;
     }
 
@@ -350,7 +350,7 @@ public class User implements Serializable {
      *
      * @param garments The garments that will be saved for this user.
      */
-    public void setGarments(Set<Garment> garments) {
+    public void setGarments(Garments garments) {
         this.garments = garments;
     }
 

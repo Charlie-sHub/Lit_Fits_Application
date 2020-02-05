@@ -1,5 +1,7 @@
 package com.example.lit_fits_application.entities;
 
+import org.simpleframework.xml.Root;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,6 +12,7 @@ import java.util.Set;
  *
  * @author Charlie
  */
+@Root(name="garment")
 public class Garment implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -20,6 +23,7 @@ public class Garment implements Serializable {
      * Unique barcode identifier of the garment
      */
     private String barcode;
+    private String namePicture;
     /**
      * The person that designed the garment
      */
@@ -63,15 +67,16 @@ public class Garment implements Serializable {
     /**
      * What colors are in the garment
      */
-    private Set<Color> colors;
+    private Colors colors;
     /**
      * What materials is the garment made out of
      */
-    private Set<Material> materials;
+    private Materials materials;
     /**
      * The picture of the garment
      */
     private byte[] picture;
+
 
     /**
      * Empty constructor
@@ -96,8 +101,9 @@ public class Garment implements Serializable {
      * @param materials
      * @param picture
      */
-    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, byte[] picture) {
+    public Garment(String barcode, String namePicture, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Colors colors, Materials materials, byte[] picture) {
         this.barcode = barcode;
+        this.namePicture = namePicture;
         this.designer = designer;
         this.price = price;
         this.mood = mood;
@@ -209,19 +215,19 @@ public class Garment implements Serializable {
         this.company = company;
     }
 
-    public Set<Color> getColors() {
+    public Colors getColors() {
         return this.colors;
     }
 
-    public void setColors(Set<Color> colors) {
+    public void setColors(Colors colors) {
         this.colors = colors;
     }
 
-    public Set<Material> getMaterials() {
+    public Materials getMaterials() {
         return this.materials;
     }
 
-    public void setMaterials(Set<Material> materials) {
+    public void setMaterials(Materials materials) {
         this.materials = materials;
     }
 
@@ -310,5 +316,16 @@ public class Garment implements Serializable {
     @Override
     public String toString() {
         return "Garment{" + "id=" + id + ", barcode=" + barcode + ", designer=" + designer + ", price=" + price + ", mood=" + mood + ", bodyPart=" + bodyPart + ", garmentType=" + garmentType + ", available=" + available + ", promotionRequest=" + promotionRequest + ", promoted=" + promoted + ", imagePath=" + imagePath + ", company=" + company + ", colors=" + colors + ", materials=" + materials + '}';
+    }
+
+    /**
+     *
+     */
+    public String getNamePicture() {
+        return namePicture;
+    }
+
+    public void setNamePicture(String namePicture) {
+        this.namePicture = namePicture;
     }
 }

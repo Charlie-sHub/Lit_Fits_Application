@@ -5,5 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ModifyAccountActivity">
+    <!--@author Ander -->
+
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="65dp"
+        android:hint="@string/field_password"
+        app:layout_constraintBottom_toTopOf="@+id/txtNewPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/txtNewPassword"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="68dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="65dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/txtEmail"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="65dp"
+        android:hint="@string/field_email"
+        app:layout_constraintBottom_toTopOf="@+id/txtPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/txtUsername"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="65dp"
+        android:hint="@string/field_username"
+        app:layout_constraintBottom_toTopOf="@+id/txtFullName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/txtFullName"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="65dp"
+        android:hint="@string/field_full_name"
+        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtModifyAccount"
+        android:layout_width="138dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="37dp"
+        android:layout_marginEnd="137dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="60dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/txtModifyAccount"
+        app:layout_constraintBottom_toTopOf="@+id/txtUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_Save"
+        android:layout_width="131dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="88dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="73dp"
+        android:text="@string/btn_Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="119dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="88dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/btn_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_Save" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

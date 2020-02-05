@@ -8,21 +8,21 @@ import java.util.List;
 
 @Root(name = "garments")
 public class Garments {
-    @ElementList(data = false, empty = true, inline = true, name = "garment", required = false)
-    private List<Garment> experts = new ArrayList<>();
+    @ElementList(data = false, empty = true, name = "garment", inline = true,  required = false)
+    private List<Garment> garments;
 
     public Garments() {
     }
 
-    public Garments(List<Garment> experts) {
-        this.experts = experts;
+    public Garments(List<Garment> garments) {
+        this.garments = garments;
     }
 
-    public List<Garment> getExperts() {
-        return experts;
+    public List<Garment> getGarments() {
+        return garments;
     }
 
-    public void setExperts(List<Garment> experts) {
-        this.experts = experts;
+    public void setGarments(List<Garment> garments) {
+        this.garments = garments;
     }
 }

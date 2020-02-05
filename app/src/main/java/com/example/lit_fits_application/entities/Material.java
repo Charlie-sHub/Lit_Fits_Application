@@ -1,5 +1,7 @@
 package com.example.lit_fits_application.entities;
 
+import org.simpleframework.xml.Root;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -8,6 +10,7 @@ import java.util.Objects;
  *
  * @author Charlie
  */
+@Root (name="material")
 public class Material implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

@@ -9,20 +9,20 @@ import java.util.List;
 @Root(name = "colors")
 public class Colors {
     @ElementList(data = false, empty = true, inline = true, name = "color", required = false)
-    private List<Color> colors = new ArrayList<>();
+    private List<Color> color;
 
     public Colors() {
     }
 
     public Colors(List<Color> colors) {
-        this.colors = colors;
+        this.color = color;
     }
 
     public List<Color> getColors() {
-        return colors;
+        return color;
     }
 
     public void setColors(List<Color> colors) {
-        this.colors = colors;
+        this.color = color;
     }
 }

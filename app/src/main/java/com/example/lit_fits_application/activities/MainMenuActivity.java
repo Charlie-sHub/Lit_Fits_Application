@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -45,6 +46,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      */
     private User user;
     private Bundle extrasBundle;
+    public static final int INFO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
+        user.getGarments().getGarments().stream().forEach(garment -> Log.println(Log.INFO , "garment Id: ", String.valueOf(garment.getId())));
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
     }
@@ -104,6 +107,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setMessage(ex.getMessage());
             alert.show();
+            ex.printStackTrace();
         }
     }
 }

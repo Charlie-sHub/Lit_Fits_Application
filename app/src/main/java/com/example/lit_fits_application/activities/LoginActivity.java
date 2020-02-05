@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -199,7 +200,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.println(Log.INFO , "User XML ", response.body().toString());
                 createAlertDialog(t.getMessage());
+                t.printStackTrace();
             }
         });
     }

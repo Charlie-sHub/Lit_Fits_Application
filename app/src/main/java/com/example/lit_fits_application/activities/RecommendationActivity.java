@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import com.example.lit_fits_application.entities.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -86,11 +88,11 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
     /**
      * List of trending Colors according to the Experts
      */
-    private List<Color> trendingColors;
+    private Colors trendingColors;
     /**
      * List of trending Materials according to the Experts
      */
-    private List<Material> trendingMaterials;
+    private Materials trendingMaterials;
     /**
      * Address of the server
      */
@@ -118,15 +120,17 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         uri = getResources().getString(R.string.uri);
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
-        fillColorList();
         fillMaterialList();
-        fillLists();
-        fillTableRow(tableRowHat, BodyPart.HAT);
-        fillTableRow(tableRowTop, BodyPart.TOP);
-        fillTableRow(tableRowBottom, BodyPart.BOTTOM);
-        fillTableRow(tableRowShoes, BodyPart.SHOE);
-        fillTableRow(tableRowOther, BodyPart.OTHER);
-        getGarmentToBuy();
+        fillColorList();
+        if (user.getGarments() != null) {
+            fillLists();
+            fillTableRow(tableRowHat, BodyPart.HAT);
+            fillTableRow(tableRowTop, BodyPart.TOP);
+            fillTableRow(tableRowBottom, BodyPart.BOTTOM);
+            fillTableRow(tableRowShoes, BodyPart.SHOE);
+            fillTableRow(tableRowOther, BodyPart.OTHER);
+            getGarmentToBuy();
+        }
     }
 
     /**
@@ -225,8 +229,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Discriminates the Garments based on what's trending and fills the lists wih them
      */
     private void fillLists() {
-        List<Garment> auxGarmentList = user.getGarments().stream().filter(garment -> garment.getColors().stream().equals(trendingColors)).collect(Collectors.toList());
-        auxGarmentList = auxGarmentList.stream().filter(garment -> garment.getMaterials().stream().equals(trendingMaterials)).collect(Collectors.toList());
+        List<Garment> auxGarmentList = user.getGarments().getGarments().stream().filter(garment -> garment.getColors().getColors().stream().equals(trendingColors)).collect(Collectors.toList());
+        auxGarmentList = auxGarmentList.stream().filter(garment -> garment.getMaterials().getMaterials().stream().equals(trendingMaterials)).collect(Collectors.toList());
         List<Garment> tops = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.TOP)).collect(Collectors.toList());
         List<Garment> bottoms = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.BOTTOM)).collect(Collectors.toList());
         List<Garment> shoes = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.SHOE)).collect(Collectors.toList());
@@ -276,21 +280,31 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
     private void fillMaterialList() {
         ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
         Call<Materials> call = expertClientInterface.recommendedMaterials();
+
         call.enqueue(new Callback<Materials>() {
             @Override
             public void onResponse(Call<Materials> call, Response<Materials> response) {
-                if (response.code() == 200) {
-                    trendingMaterials = response.body().getMaterials();
-                } else if (response.code() == 500) {
-                    createAlertDialog("Unknown Error");
-                }
+                createAlertDialog(response.body().toString());
+                getMaterialResponse(response);
             }
 
             @Override
             public void onFailure(Call<Materials> call, Throwable t) {
                 createAlertDialog(t.getMessage());
+                createAlertDialog("Something failed");
             }
         });
+
+
+    }
+
+    private void getMaterialResponse(Response<Materials> response) {
+        if (response.code() == 200) {
+            trendingMaterials = response.body();
+            //trendingMaterials.setMaterials(response.body().getMaterials());
+        } else if (response.code() == 500) {
+            createAlertDialog("Unknown Error");
+        }
     }
 
     /**
@@ -299,14 +313,17 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
     private void fillColorList() {
         ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
         Call<Colors> call = expertClientInterface.recommendedColors();
+        try {
+            trendingColors.setColors(call.execute().body().getColors());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
         call.enqueue(new Callback<Colors>() {
             @Override
             public void onResponse(Call<Colors> call, Response<Colors> response) {
-                if (response.code() == 200) {
-                    trendingColors = response.body().getColors();
-                } else if (response.code() == 500) {
-                    createAlertDialog("Unknown Error");
-                }
+                createAlertDialog(response.body().getColors().toString());
+                getColorsResponse(response);
             }
 
             @Override
@@ -314,14 +331,25 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
                 createAlertDialog(t.getMessage());
             }
         });
+
+         */
+    }
+
+    private void getColorsResponse(Response<Colors> response) {
+        if (response.code() == 200) {
+            trendingColors = new Colors();
+            trendingColors.setColors(response.body().getColors());
+        } else if (response.code() == 500) {
+            createAlertDialog("Unknown Error");
+        }
     }
 
     /**
      * Assigns the elements
      */
     private void findById() {
-        buttonGoBack = findViewById(R.id.buttonGoBack);
-        tableRecommendations = findViewById(R.id.tableRecommendations);
+        buttonGoBack =findViewById(R.id.buttonGoBack);
+        tableRecommendations =findViewById(R.id.tableRecommendations);
         tableRowToBuy = findViewById(R.id.tableRowToBuy);
     }
 

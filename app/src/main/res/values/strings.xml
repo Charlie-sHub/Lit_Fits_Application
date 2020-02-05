@@ -22,4 +22,9 @@
     <string name="buttonCloset">Check Closet</string>
     <string name="buttonModifyAccount">Modify Account</string>
     <string name="buttonGoBack">Back</string>
+    <!-- activity ModifyAccount @author Ander-->
+    <string name="btn_Save">Save</string>
+    <string name="txtModifyAccount">Modify Account</string>
+    <string name="field_NewPassword">New Password</string>
+
 </resources>

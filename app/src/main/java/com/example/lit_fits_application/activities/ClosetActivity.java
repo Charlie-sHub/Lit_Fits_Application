@@ -61,8 +61,8 @@ public class ClosetActivity extends AppCompatActivity {
     
     private void fillGarmentTable() {
 
-        if (!user.getGarments().isEmpty()) {
-            for (Garment garment: user.getGarments()) {
+        if (!user.getGarments().getGarments().isEmpty()) {
+            for (Garment garment: user.getGarments().getGarments()) {
                 this.createNewGarmentTableRow(garment, this);
             }
         } else {
@@ -108,7 +108,7 @@ public class ClosetActivity extends AppCompatActivity {
 
         User changeUser = this.user;
 
-        changeUser.getGarments().remove(garment);
+        changeUser.getGarments().getGarments().remove(garment);
 
         UserClientInterface userClient = new ClientFactory().getUserClient(uri);
         Call<Void> voidCall = userClient.editUser(user);
