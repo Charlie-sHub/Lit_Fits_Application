@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Charlie Mendez
  */
-@Root (name="color")
+@Root (name="colors")
 public class Color implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

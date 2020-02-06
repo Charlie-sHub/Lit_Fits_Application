@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author Carlos Mendez
  */
-@Root(name="garment")
+@Root(name="garments")
 public class Garment implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
