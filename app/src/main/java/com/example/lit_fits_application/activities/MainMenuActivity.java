@@ -4,13 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.entities.User;
@@ -38,29 +41,42 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      */
     private Button buttonModifyAccount;
     /**
-     * Buttong to log out of Lit Fits
+     * Button to log out of Lit Fits
      */
     private Button buttonLogOut;
+    private ImageView litFitsLogo;
     /**
      * The User that logged in
      */
     private User user;
     private Bundle extrasBundle;
-    public static final int INFO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        findButtons();
+        findViews();
+        animate();
         setListenerForButtons();
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
-        user.getGarments().getGarments().stream().forEach(garment -> Log.println(Log.INFO , "garment Id: ", String.valueOf(garment.getId())));
+        // user.getGarments().getGarments().stream().forEach(garment -> Log.println(Log.INFO , "garment Id: ", String.valueOf(garment.getId())));
         getWindow().setEnterTransition(new Fade());
         getWindow().setExitTransition(new Explode());
+    }
+
+    private void animate() {
+        Animation animationZoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_back_in);
+        Animation animationLeftIn = AnimationUtils.loadAnimation(this, R.anim.left_in);
+        Animation animationRightIn = AnimationUtils.loadAnimation(this, R.anim.right_in);
+        buttonCloset.startAnimation(animationRightIn);
+        buttonLogOut.startAnimation(animationLeftIn);
+        buttonModifyAccount.startAnimation(animationRightIn);
+        buttonRecommendation.startAnimation(animationLeftIn);
+        buttonTastes.startAnimation(animationRightIn);
+        litFitsLogo.startAnimation(animationZoomIn);
     }
 
     private void setListenerForButtons() {
@@ -71,16 +87,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         buttonLogOut.setOnClickListener(this);
     }
 
-    private void findButtons() {
+    private void findViews() {
         buttonCloset = findViewById(R.id.buttonCloset);
         buttonTastes = findViewById(R.id.buttonTastes);
         buttonRecommendation = findViewById(R.id.buttonRecommendation);
         buttonLogOut = findViewById(R.id.buttonLogOut);
         buttonModifyAccount = findViewById(R.id.buttonModifyAccount);
+        litFitsLogo = findViewById(R.id.imageViewLogo);
     }
 
     @Override
     public void onClick(View v) {
+        MediaPlayer.create(this, R.raw.oof);
         try {
             if (v.getId() == buttonCloset.getId()) {
                 Intent closetActivityIntent = new Intent(this, ClosetActivity.class);

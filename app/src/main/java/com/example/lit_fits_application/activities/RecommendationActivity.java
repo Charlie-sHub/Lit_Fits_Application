@@ -4,13 +4,18 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -25,18 +30,25 @@ import com.example.lit_fits_application.clients.GarmentClientInterface;
 import com.example.lit_fits_application.entities.BodyPart;
 import com.example.lit_fits_application.entities.Color;
 import com.example.lit_fits_application.entities.Colors;
+import com.example.lit_fits_application.entities.Company;
 import com.example.lit_fits_application.entities.Garment;
+import com.example.lit_fits_application.entities.GarmentType;
 import com.example.lit_fits_application.entities.Material;
 import com.example.lit_fits_application.entities.Materials;
+import com.example.lit_fits_application.entities.Mood;
 import com.example.lit_fits_application.entities.User;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -88,19 +100,19 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
     /**
      * List of trending Colors according to the Experts
      */
-    private Colors trendingColors;
+    private ArrayList<Color> trendingColors;
     /**
      * List of trending Materials according to the Experts
      */
-    private Materials trendingMaterials;
+    private ArrayList<Material> trendingMaterials;
     /**
      * Address of the server
      */
-    private String uri;
+    // private String uri;
     /**
      * The amount of garments
      */
-    Integer amountOfGarments;
+    // Integer amountOfGarments;
     /**
      * HashMap with the recommended Garments
      */
@@ -117,9 +129,11 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         extrasBundle = new Bundle();
         extrasBundle = getIntent().getExtras();
         user = (User) extrasBundle.get("USER");
-        uri = getResources().getString(R.string.uri);
-        getWindow().setEnterTransition(new Fade());
+        // uri = getResources().getString(R.string.uri);
+        getWindow().setEnterTransition(new Slide());
         getWindow().setExitTransition(new Explode());
+        Animation animationRightIn = AnimationUtils.loadAnimation(this, R.anim.right_in);
+        buttonGoBack.startAnimation(animationRightIn);
         fillMaterialList();
         fillColorList();
         if (user.getGarments() != null) {
@@ -129,74 +143,99 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
             fillTableRow(tableRowBottom, BodyPart.BOTTOM);
             fillTableRow(tableRowShoes, BodyPart.SHOE);
             fillTableRow(tableRowOther, BodyPart.OTHER);
-            getGarmentToBuy();
+            fillTableRowToBuy(getGarmentToBuy());
         }
     }
 
     /**
      * Gets a random garment to recommend the user to buy
      */
-    private void getGarmentToBuy() {
-        // get random garment by random id
-        GarmentClientInterface garmentClientInterface = getAmountOfGarments();
-        Random random = new Random();
-        // it's a shitty solution but there's no time for anything better
-        Long aux = random.nextLong() + 1;
-        while (aux > amountOfGarments) {
-            aux = random.nextLong();
+    private Garment getGarmentToBuy() {
+        /*
+            // get random garment by random id
+            GarmentClientInterface garmentClientInterface = getAmountOfGarments();
+            Random random = new Random();
+            // it's a shitty solution but there's no time for anything better
+            Long aux = random.nextLong() + 1;
+            while (aux > amountOfGarments) {
+                aux = random.nextLong();
+            }
+            getGarmentFromServer(garmentClientInterface, aux);
+        */
+        List<Garment> auxCompanyGarments = new ArrayList<>();
+        Company auxCompany = new Company("A1111111A", "abcd", "Some Company", "111223344", "some@com.pany", new Date(), new Date(), auxCompanyGarments);
+        Garment auxGarment6 = createAuxGarment6(auxCompany);
+        auxCompanyGarments.add(auxGarment6);
+        auxCompany.setGarments(auxCompanyGarments);
+        return auxGarment6;
+    }
+
+    private Garment createAuxGarment6(Company auxCompany) {
+        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxsix);
+        Set<Color> auxColors1 = new HashSet<>();
+        Color auxColor1 = new Color("Green");
+        Color auxColor2 = new Color("Yellow");
+        auxColors1.add(auxColor1);
+        auxColors1.add(auxColor2);
+        Set<Material> auxMaterials1 = new HashSet<>();
+        Material auxMaterial1 = new Material("Leather");
+        Material auxMaterial2 = new Material("Silk");
+        auxMaterials1.add(auxMaterial1);
+        auxMaterials1.add(auxMaterial2);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.FULLBODY, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
+    }
+
+    /*
+        private void getGarmentFromServer(GarmentClientInterface garmentClientInterface, Long aux) {
+            Call<Garment> garmentCall = garmentClientInterface.findGarment(aux.toString());
+            garmentCall.enqueue(new Callback<Garment>() {
+                @Override
+                public void onResponse(Call<Garment> call, Response<Garment> response) {
+                    if (response.code() == 200) {
+                        fillTableRowToBuy(response);
+                    } else {
+                        createAlertDialog("Unknown Error");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Garment> call, Throwable t) {
+
+                }
+            });
         }
-        getGarmentFromServer(garmentClientInterface, aux);
-    }
+     */
 
-    private void getGarmentFromServer(GarmentClientInterface garmentClientInterface, Long aux) {
-        Call<Garment> garmentCall = garmentClientInterface.findGarment(aux.toString());
-        garmentCall.enqueue(new Callback<Garment>() {
-            @Override
-            public void onResponse(Call<Garment> call, Response<Garment> response) {
-                if (response.code() == 200) {
-                    fillTableRowToBuy(response);
-                } else {
+    /*
+        private GarmentClientInterface getAmountOfGarments() {
+            GarmentClientInterface garmentClientInterface = new ClientFactory().getGarmentClient(uri);
+            Call<Integer> amountOfGarmentsCall = garmentClientInterface.countREST();
+            amountOfGarmentsCall.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.code() == 200) {
+                        amountOfGarments = response.body();
+                    } else {
+                        createAlertDialog("Unknown Error");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     createAlertDialog("Unknown Error");
                 }
-            }
+            });
+            return garmentClientInterface;
+        }
+     */
 
-            @Override
-            public void onFailure(Call<Garment> call, Throwable t) {
-
-            }
-        });
-    }
-
-    @NotNull
-    private GarmentClientInterface getAmountOfGarments() {
-        GarmentClientInterface garmentClientInterface = new ClientFactory().getGarmentClient(uri);
-        Call<Integer> amountOfGarmentsCall = garmentClientInterface.countREST();
-        amountOfGarmentsCall.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if (response.code() == 200) {
-                    amountOfGarments = response.body();
-                } else {
-                    createAlertDialog("Unknown Error");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                createAlertDialog("Unknown Error");
-            }
-        });
-        return garmentClientInterface;
-    }
-
-    private void fillTableRowToBuy(Response<Garment> response) {
+    private void fillTableRowToBuy(Garment garment) {
         ImageView imageView = new ImageView(this);
-        Bitmap imageBitmap = BitmapFactory.decodeByteArray(response.body().getPicture(), 0, response.body().getPicture().length);
-        imageView.setImageBitmap(imageBitmap);
+        imageView.setImageBitmap(garment.getPicture());
         TextView textViewBarcode = new TextView(this);
-        textViewBarcode.setText(response.body().getBarcode());
+        textViewBarcode.setText(garment.getBarcode());
         TextView textViewCompany = new TextView(this);
-        textViewCompany.setText(response.body().getCompany().getFullName());
+        textViewCompany.setText(garment.getCompany().getFullName());
         tableRowToBuy.addView(imageView);
         tableRowToBuy.addView(textViewBarcode);
         tableRowToBuy.addView(textViewCompany);
@@ -209,8 +248,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         if (!recommendationsHashMap.isEmpty()) {
             if (recommendationsHashMap.get(bodyPart) != null) {
                 ImageView imageView = new ImageView(this);
-                Bitmap imageBitmap = BitmapFactory.decodeByteArray(recommendationsHashMap.get(bodyPart).getPicture(), 0, recommendationsHashMap.get(bodyPart).getPicture().length);
-                imageView.setImageBitmap(imageBitmap);
+                imageView.setImageBitmap(recommendationsHashMap.get(bodyPart).getPicture());
                 TextView textViewBarcode = new TextView(this);
                 textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
                 TextView textViewCompany = new TextView(this);
@@ -229,8 +267,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Discriminates the Garments based on what's trending and fills the lists wih them
      */
     private void fillLists() {
-        List<Garment> auxGarmentList = user.getGarments().getGarments().stream().filter(garment -> garment.getColors().getColors().stream().equals(trendingColors)).collect(Collectors.toList());
-        auxGarmentList = auxGarmentList.stream().filter(garment -> garment.getMaterials().getMaterials().stream().equals(trendingMaterials)).collect(Collectors.toList());
+        List<Garment> auxGarmentList = user.getGarments().stream().filter(garment -> garment.getColors().stream().equals(trendingColors)).collect(Collectors.toList());
+        auxGarmentList = auxGarmentList.stream().filter(garment -> garment.getMaterials().stream().equals(trendingMaterials)).collect(Collectors.toList());
         List<Garment> tops = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.TOP)).collect(Collectors.toList());
         List<Garment> bottoms = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.BOTTOM)).collect(Collectors.toList());
         List<Garment> shoes = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.SHOE)).collect(Collectors.toList());
@@ -278,83 +316,92 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Gets all the recommended Materials from the server and fills the List with them
      */
     private void fillMaterialList() {
-        ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
-        Call<Materials> call = expertClientInterface.recommendedMaterials();
+        /*
+            ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
+            Call<Materials> call = expertClientInterface.recommendedMaterials();
 
-        call.enqueue(new Callback<Materials>() {
-            @Override
-            public void onResponse(Call<Materials> call, Response<Materials> response) {
-                createAlertDialog(response.body().toString());
-                getMaterialResponse(response);
-            }
+            call.enqueue(new Callback<Materials>() {
+                @Override
+                public void onResponse(Call<Materials> call, Response<Materials> response) {
+                    createAlertDialog(response.body().toString());
+                    getMaterialResponse(response);
+                }
 
-            @Override
-            public void onFailure(Call<Materials> call, Throwable t) {
-                createAlertDialog(t.getMessage());
-                createAlertDialog("Something failed");
-            }
-        });
-
-
+                @Override
+                public void onFailure(Call<Materials> call, Throwable t) {
+                    createAlertDialog(t.getMessage());
+                    createAlertDialog("Something failed");
+                }
+            });
+         */
+        trendingMaterials = new ArrayList<>();
+        Material auxMaterial1 = new Material("Leather");
+        Material auxMaterial2 = new Material("Cotton");
+        Material auxMaterial3 = new Material("Silk");
+        trendingMaterials.add(auxMaterial1);
+        trendingMaterials.add(auxMaterial2);
+        trendingMaterials.add(auxMaterial3);
     }
-
-    private void getMaterialResponse(Response<Materials> response) {
-        if (response.code() == 200) {
-            trendingMaterials = response.body();
-            //trendingMaterials.setMaterials(response.body().getMaterials());
-        } else if (response.code() == 500) {
-            createAlertDialog("Unknown Error");
+    /*
+        private void getMaterialResponse(Response<Materials> response) {
+            if (response.code() == 200) {
+                trendingMaterials = response.body();
+                //trendingMaterials.setMaterials(response.body().getMaterials());
+            } else if (response.code() == 500) {
+                createAlertDialog("Unknown Error");
+            }
         }
-    }
-
+    */
     /**
      * Gets all the recommended Colors from the server and fills the List with them
      */
     private void fillColorList() {
-        ExpertClientInterface expertClientInterface = new ClientFactory().getExpertClient(uri);
-        Call<Colors> call = expertClientInterface.recommendedColors();
-        try {
-            trendingColors.setColors(call.execute().body().getColors());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         /*
-        call.enqueue(new Callback<Colors>() {
-            @Override
-            public void onResponse(Call<Colors> call, Response<Colors> response) {
-                createAlertDialog(response.body().getColors().toString());
-                getColorsResponse(response);
-            }
+            call.enqueue(new Callback<Colors>() {
+                @Override
+                public void onResponse(Call<Colors> call, Response<Colors> response) {
+                    createAlertDialog(response.body().getColors().toString());
+                    getColorsResponse(response);
+                }
 
-            @Override
-            public void onFailure(Call<Colors> call, Throwable t) {
-                createAlertDialog(t.getMessage());
-            }
-        });
-
+                @Override
+                public void onFailure(Call<Colors> call, Throwable t) {
+                    createAlertDialog(t.getMessage());
+                }
+            });
          */
+        trendingColors = new ArrayList<>();
+        Color auxColor1 = new Color("Black");
+        Color auxColor2 = new Color("White");
+        Color auxColor3 = new Color("Red");
+        trendingColors.add(auxColor1);
+        trendingColors.add(auxColor2);
+        trendingColors.add(auxColor3);
     }
-
-    private void getColorsResponse(Response<Colors> response) {
-        if (response.code() == 200) {
-            trendingColors = new Colors();
-            trendingColors.setColors(response.body().getColors());
-        } else if (response.code() == 500) {
-            createAlertDialog("Unknown Error");
+    /*
+        private void getColorsResponse(Response<Colors> response) {
+            if (response.code() == 200) {
+                trendingColors = new Colors();
+                trendingColors.setColors(response.body().getColors());
+            } else if (response.code() == 500) {
+                createAlertDialog("Unknown Error");
+            }
         }
-    }
+    */
 
     /**
      * Assigns the elements
      */
     private void findById() {
-        buttonGoBack =findViewById(R.id.buttonGoBack);
-        tableRecommendations =findViewById(R.id.tableRecommendations);
+        buttonGoBack = findViewById(R.id.buttonGoBack);
+        buttonGoBack.setBackgroundColor(android.graphics.Color.RED);
+        tableRecommendations = findViewById(R.id.tableRecommendations);
         tableRowToBuy = findViewById(R.id.tableRowToBuy);
     }
 
     @Override
     public void onClick(View v) {
+        MediaPlayer.create(this, R.raw.oof);
         if (v.getId() == buttonGoBack.getId()) {
             Intent mainMenuActivityIntent = new Intent(this, MainMenuActivity.class);
             mainMenuActivityIntent.putExtra("USER", user);

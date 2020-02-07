@@ -113,8 +113,8 @@ public class TastesActivity extends AppCompatActivity implements View.OnClickLis
      * Fills the color table with all the colors that the user likes.
      */
     private void fillColorTable() {
-        if (!user.getLikedColors().getColors().isEmpty()) {
-            for (Color color : user.getLikedColors().getColors()) {
+        if (!user.getLikedColors().isEmpty()) {
+            for (Color color : user.getLikedColors()) {
                 this.createNewColorTableRow(color, this);
             }
         } else {
@@ -188,8 +188,8 @@ public class TastesActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void fillMaterialTable() {
-        if (!user.getLikedMaterials().getMaterials().isEmpty()) {
-            for (Material material: user.getLikedMaterials().getMaterials()) {
+        if (!user.getLikedMaterials().isEmpty()) {
+            for (Material material : user.getLikedMaterials()) {
                 this.createNewColorTableRow(material, this);
             }
         } else {

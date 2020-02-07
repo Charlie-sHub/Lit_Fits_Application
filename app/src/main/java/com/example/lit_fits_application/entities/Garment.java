@@ -1,5 +1,8 @@
 package com.example.lit_fits_application.entities;
 
+import android.graphics.Bitmap;
+import android.media.Image;
+
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
@@ -81,7 +84,7 @@ public class Garment implements Serializable {
     /**
      * The picture of the garment
      */
-    private byte[] picture;
+    private Bitmap picture;
 
 
     /**
@@ -109,7 +112,7 @@ public class Garment implements Serializable {
      * @param materials
      * @param picture
      */
-    public Garment(String barcode, String namePicture, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, byte[] picture) {
+    public Garment(String barcode, String namePicture, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, Bitmap picture) {
         this.barcode = barcode;
         this.namePicture = namePicture;
         this.designer = designer;
@@ -239,11 +242,11 @@ public class Garment implements Serializable {
         this.materials = materials;
     }
 
-    public byte[] getPicture() {
+    public Bitmap getPicture() {
         return this.picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(Bitmap picture) {
         this.picture = picture;
     }
 
