@@ -17,7 +17,6 @@ import java.util.Set;
  */
 @Root(name = "user")
 public class User implements Serializable {
-
     protected String username;
     protected String fullName;
     protected String password;
@@ -37,6 +36,8 @@ public class User implements Serializable {
      * Empty constructor
      */
     public User() {
+        likedColors = new HashSet<>();
+        likedMaterials = new HashSet<>();
         garments = new HashSet<>();
     }
 

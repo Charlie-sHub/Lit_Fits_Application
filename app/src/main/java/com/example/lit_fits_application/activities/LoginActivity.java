@@ -5,10 +5,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
@@ -18,44 +14,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lit_fits_application.R;
-import com.example.lit_fits_application.clients.ClientFactory;
-import com.example.lit_fits_application.clients.PublicKeyClientInterface;
-import com.example.lit_fits_application.clients.UserClientInterface;
-import com.example.lit_fits_application.entities.BodyPart;
 import com.example.lit_fits_application.entities.Color;
-import com.example.lit_fits_application.entities.Company;
 import com.example.lit_fits_application.entities.Garment;
-import com.example.lit_fits_application.entities.GarmentType;
 import com.example.lit_fits_application.entities.Material;
-import com.example.lit_fits_application.entities.Mood;
 import com.example.lit_fits_application.entities.User;
 import com.example.lit_fits_application.miscellaneous.AdminSQLiteOpenHelper;
-import com.example.lit_fits_application.miscellaneous.Encryptor;
 
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import androidx.core.content.ContextCompat;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -103,20 +76,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     // private byte[] publicKeyBytes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.gotta_go_fast_soundtrack);
-        musicPlayer.start();
-        // uri = getResources().getString(R.string.uri);
-        findViews();
-        animate();
-        setListeners();
-        textFields = new ArrayList<>();
-        addFieldsToArray();
-        // Setting the transitions
-        getWindow().setExitTransition(new Explode());
-        // getPublicKey();
+        try {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_login);
+            musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.gotta_go_fast_soundtrack);
+            musicPlayer.start();
+            // uri = getResources().getString(R.string.uri);
+            findViews();
+            animate();
+            setListeners();
+            textFields = new ArrayList<>();
+            addFieldsToArray();
+            // Setting the transitions
+            getWindow().setExitTransition(new Explode());
+            // getPublicKey();
+        } catch (Exception e) {
+            createAlertDialog(e.getMessage());
+        }
     }
 
     private void animate() {
@@ -172,6 +149,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 onBtnRegisterPress();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             createAlertDialog(e.getMessage());
         }
     }
@@ -187,121 +165,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         user.setPassword(String.valueOf(fieldUsername.getText()));
         user.addLikedColor(new Color("Black"));
         user.addLikedMaterial(new Material("Leather"));
-        List<Garment> auxCompanyGarments = new ArrayList<>();
-        Company auxCompany = new Company("A1111111A", "abcd", "Some Company", "111223344", "some@com.pany", new Date(), new Date(), auxCompanyGarments);
         Set<Garment> auxUserGarments = new HashSet<>();
-        createAndAddGarments(auxCompanyGarments, auxCompany, auxUserGarments);
         user.setGarments(auxUserGarments);
-    }
-
-    private void createAndAddGarments(List<Garment> auxCompanyGarments, Company auxCompany, Set<Garment> auxUserGarments) {
-        Garment auxGarment1 = createAuxGarment1(auxCompany);
-        Garment auxGarment2 = createAuxGarment2(auxCompany);
-        Garment auxGarment3 = createAuxGarment3(auxCompany);
-        Garment auxGarment4 = createAuxGarment4(auxCompany);
-        Garment auxGarment5 = createAuxGarment5(auxCompany);
-        Garment auxGarment6 = createAuxGarment6(auxCompany);
-        auxCompanyGarments.add(auxGarment1);
-        auxCompanyGarments.add(auxGarment2);
-        auxCompanyGarments.add(auxGarment3);
-        auxCompanyGarments.add(auxGarment4);
-        auxCompanyGarments.add(auxGarment5);
-        auxCompanyGarments.add(auxGarment6);
-        auxCompany.setGarments(auxCompanyGarments);
-        auxUserGarments.add(auxGarment1);
-        auxUserGarments.add(auxGarment2);
-        auxUserGarments.add(auxGarment3);
-        auxUserGarments.add(auxGarment4);
-    }
-
-    private Garment createAuxGarment6(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxsix);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Green");
-        Color auxColor2 = new Color("Yellow");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Leather");
-        Material auxMaterial2 = new Material("Silk");
-        auxMaterials1.add(auxMaterial1);
-        auxMaterials1.add(auxMaterial2);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.FULLBODY, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
-    }
-
-    private Garment createAuxGarment5(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxfive);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Yellow");
-        Color auxColor2 = new Color("White");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Nylon");
-        Material auxMaterial2 = new Material("Cotton");
-        auxMaterials1.add(auxMaterial1);
-        auxMaterials1.add(auxMaterial2);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.OTHER, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
-    }
-
-    private Garment createAuxGarment4(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxfour);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Black");
-        Color auxColor2 = new Color("White");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Cotton");
-        auxMaterials1.add(auxMaterial1);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.HAT, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
-    }
-
-    private Garment createAuxGarment3(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxthree);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Black");
-        Color auxColor2 = new Color("Red");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Leather");
-        Material auxMaterial2 = new Material("Jean");
-        Material auxMaterial3 = new Material("Cotton");
-        auxMaterials1.add(auxMaterial1);
-        auxMaterials1.add(auxMaterial2);
-        auxMaterials1.add(auxMaterial3);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.SHOE, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
-    }
-
-    private Garment createAuxGarment2(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxtwo);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Blue");
-        Color auxColor2 = new Color("Red");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Silk");
-        Material auxMaterial2 = new Material("Nylon");
-        auxMaterials1.add(auxMaterial1);
-        auxMaterials1.add(auxMaterial2);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.TOP, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
-    }
-
-    private Garment createAuxGarment1(Company auxCompany) {
-        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxone);
-        Set<Color> auxColors1 = new HashSet<>();
-        Color auxColor1 = new Color("Black");
-        Color auxColor2 = new Color("White");
-        auxColors1.add(auxColor1);
-        auxColors1.add(auxColor2);
-        Set<Material> auxMaterials1 = new HashSet<>();
-        Material auxMaterial1 = new Material("Leather");
-        Material auxMaterial2 = new Material("Cotton");
-        auxMaterials1.add(auxMaterial1);
-        auxMaterials1.add(auxMaterial2);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.BOTTOM, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
     }
 
     /**
@@ -454,7 +319,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SQLiteDatabase database = admin.getWritableDatabase();
         String username = fieldUsername.getText().toString();
         if (!username.isEmpty()) {
-            Cursor row = database.rawQuery("select password from users where username =" + username, null);
+            Cursor row = database.rawQuery("select password from users where username = '" + username + "'", null);
             if (row.moveToFirst()) {
                 fieldPassword.setText(row.getString(0));
                 database.close();

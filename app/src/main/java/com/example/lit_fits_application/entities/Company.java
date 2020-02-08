@@ -1,6 +1,7 @@
 package com.example.lit_fits_application.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -50,6 +51,7 @@ public class Company implements Serializable {
      * Empty constructor
      */
     public Company() {
+        garments = new ArrayList<>();
     }
 
     /**

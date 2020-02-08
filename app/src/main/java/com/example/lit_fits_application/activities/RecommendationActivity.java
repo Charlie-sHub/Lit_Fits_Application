@@ -7,15 +7,12 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,36 +21,26 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lit_fits_application.R;
-import com.example.lit_fits_application.clients.ClientFactory;
-import com.example.lit_fits_application.clients.ExpertClientInterface;
-import com.example.lit_fits_application.clients.GarmentClientInterface;
 import com.example.lit_fits_application.entities.BodyPart;
 import com.example.lit_fits_application.entities.Color;
-import com.example.lit_fits_application.entities.Colors;
 import com.example.lit_fits_application.entities.Company;
 import com.example.lit_fits_application.entities.Garment;
 import com.example.lit_fits_application.entities.GarmentType;
 import com.example.lit_fits_application.entities.Material;
-import com.example.lit_fits_application.entities.Materials;
 import com.example.lit_fits_application.entities.Mood;
 import com.example.lit_fits_application.entities.User;
 
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Activity where Garments are recommended to the User
@@ -121,29 +108,35 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommendation);
-        findById();
-        buttonGoBack.setOnClickListener(this);
-        extrasBundle = new Bundle();
-        extrasBundle = getIntent().getExtras();
-        user = (User) extrasBundle.get("USER");
-        // uri = getResources().getString(R.string.uri);
-        getWindow().setEnterTransition(new Slide());
-        getWindow().setExitTransition(new Explode());
-        Animation animationRightIn = AnimationUtils.loadAnimation(this, R.anim.right_in);
-        buttonGoBack.startAnimation(animationRightIn);
-        fillMaterialList();
-        fillColorList();
-        if (user.getGarments() != null) {
-            fillLists();
-            fillTableRow(tableRowHat, BodyPart.HAT);
-            fillTableRow(tableRowTop, BodyPart.TOP);
-            fillTableRow(tableRowBottom, BodyPart.BOTTOM);
-            fillTableRow(tableRowShoes, BodyPart.SHOE);
-            fillTableRow(tableRowOther, BodyPart.OTHER);
-            fillTableRowToBuy(getGarmentToBuy());
+        try {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_recommendation);
+            findById();
+            buttonGoBack.setOnClickListener(this);
+            extrasBundle = new Bundle();
+            extrasBundle = getIntent().getExtras();
+            user = (User) extrasBundle.get("USER");
+            setUserGarments();
+            // uri = getResources().getString(R.string.uri);
+            getWindow().setEnterTransition(new Slide());
+            getWindow().setExitTransition(new Explode());
+            Animation animationRightIn = AnimationUtils.loadAnimation(this, R.anim.right_in);
+            buttonGoBack.startAnimation(animationRightIn);
+            fillMaterialList();
+            fillColorList();
+            if (user.getGarments() != null) {
+                fillLists();
+                fillTableRow(tableRowHat, BodyPart.HAT);
+                fillTableRow(tableRowTop, BodyPart.TOP);
+                fillTableRow(tableRowBottom, BodyPart.BOTTOM);
+                fillTableRow(tableRowShoes, BodyPart.SHOE);
+                fillTableRow(tableRowOther, BodyPart.OTHER);
+                fillTableRowToBuy(getGarmentToBuy());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            createAlertDialog(e.getMessage());
         }
     }
 
@@ -164,14 +157,18 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         */
         List<Garment> auxCompanyGarments = new ArrayList<>();
         Company auxCompany = new Company("A1111111A", "abcd", "Some Company", "111223344", "some@com.pany", new Date(), new Date(), auxCompanyGarments);
-        Garment auxGarment6 = createAuxGarment6(auxCompany);
-        auxCompanyGarments.add(auxGarment6);
+        Garment garmentToBuy = createGarmentToBuy(auxCompany);
+        auxCompanyGarments.add(garmentToBuy);
         auxCompany.setGarments(auxCompanyGarments);
-        return auxGarment6;
+        return garmentToBuy;
     }
 
-    private Garment createAuxGarment6(Company auxCompany) {
+    private Garment createGarmentToBuy(Company auxCompany) {
         Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxsix);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] pictureBytes = byteArrayOutputStream.toByteArray();
+        picture.recycle();
         Set<Color> auxColors1 = new HashSet<>();
         Color auxColor1 = new Color("Green");
         Color auxColor2 = new Color("Yellow");
@@ -182,7 +179,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         Material auxMaterial2 = new Material("Silk");
         auxMaterials1.add(auxMaterial1);
         auxMaterials1.add(auxMaterial2);
-        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.FULLBODY, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, picture);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.FULLBODY, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, pictureBytes);
     }
 
     /*
@@ -231,7 +228,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
 
     private void fillTableRowToBuy(Garment garment) {
         ImageView imageView = new ImageView(this);
-        imageView.setImageBitmap(garment.getPicture());
+        Bitmap picture = BitmapFactory.decodeByteArray(garment.getPicture(), 0, garment.getPicture().length);
+        imageView.setImageBitmap(picture);
         TextView textViewBarcode = new TextView(this);
         textViewBarcode.setText(garment.getBarcode());
         TextView textViewCompany = new TextView(this);
@@ -248,7 +246,8 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         if (!recommendationsHashMap.isEmpty()) {
             if (recommendationsHashMap.get(bodyPart) != null) {
                 ImageView imageView = new ImageView(this);
-                imageView.setImageBitmap(recommendationsHashMap.get(bodyPart).getPicture());
+                Bitmap picture = BitmapFactory.decodeByteArray(recommendationsHashMap.get(bodyPart).getPicture(), 0, recommendationsHashMap.get(bodyPart).getPicture().length);
+                imageView.setImageBitmap(picture);
                 TextView textViewBarcode = new TextView(this);
                 textViewBarcode.setText(recommendationsHashMap.get(bodyPart).getBarcode());
                 TextView textViewCompany = new TextView(this);
@@ -267,7 +266,9 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * Discriminates the Garments based on what's trending and fills the lists wih them
      */
     private void fillLists() {
-        List<Garment> auxGarmentList = user.getGarments().stream().filter(garment -> garment.getColors().stream().equals(trendingColors)).collect(Collectors.toList());
+        List<Garment> auxGarmentList = user.getGarments().stream().filter(garment -> garment.getColors().stream().anyMatch(color -> {
+            
+        })).collect(Collectors.toList());
         auxGarmentList = auxGarmentList.stream().filter(garment -> garment.getMaterials().stream().equals(trendingMaterials)).collect(Collectors.toList());
         List<Garment> tops = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.TOP)).collect(Collectors.toList());
         List<Garment> bottoms = auxGarmentList.stream().filter(garment -> garment.getBodyPart().equals(BodyPart.BOTTOM)).collect(Collectors.toList());
@@ -305,11 +306,22 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
      * @param other
      */
     private void fillHashMap(List<Garment> tops, List<Garment> bottoms, List<Garment> shoes, List<Garment> hats, List<Garment> other) {
-        recommendationsHashMap.put(BodyPart.TOP, tops.get(1));
-        recommendationsHashMap.put(BodyPart.BOTTOM, bottoms.get(1));
-        recommendationsHashMap.put(BodyPart.SHOE, shoes.get(1));
-        recommendationsHashMap.put(BodyPart.HAT, hats.get(1));
-        recommendationsHashMap.put(BodyPart.OTHER, other.get(1));
+        recommendationsHashMap = new HashMap<>();
+        if (tops.size() > 0) {
+            recommendationsHashMap.put(BodyPart.TOP, tops.get(0));
+        }
+        if (bottoms.size() > 0) {
+            recommendationsHashMap.put(BodyPart.BOTTOM, bottoms.get(0));
+        }
+        if (shoes.size() > 0) {
+            recommendationsHashMap.put(BodyPart.SHOE, shoes.get(0));
+        }
+        if (hats.size() > 0) {
+            recommendationsHashMap.put(BodyPart.HAT, hats.get(0));
+        }
+        if (other.size() > 0) {
+            recommendationsHashMap.put(BodyPart.OTHER, other.get(0));
+        }
     }
 
     /**
@@ -352,6 +364,7 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
             }
         }
     */
+
     /**
      * Gets all the recommended Colors from the server and fills the List with them
      */
@@ -418,5 +431,105 @@ public class RecommendationActivity extends AppCompatActivity implements View.On
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage(message);
         alert.show();
+    }
+
+    private void setUserGarments() throws Exception {
+        Company auxCompany = new Company("A1111111A", "abcd", "Some Company", "111223344", "some@com.pany", new Date(), new Date(), new ArrayList<>());
+        Set<Garment> auxUserGarments = new HashSet<>();
+        createAndAddGarments(auxCompany, auxUserGarments);
+        user.setGarments(auxUserGarments);
+    }
+
+    /**
+     * Creates and adds the auxiliary garments
+     *
+     * @param auxCompany
+     * @param auxUserGarments
+     */
+    private void createAndAddGarments(Company auxCompany, Set<Garment> auxUserGarments) {
+        Garment auxGarment1 = createAuxGarment1(auxCompany);
+        Garment auxGarment2 = createAuxGarment2(auxCompany);
+        Garment auxGarment3 = createAuxGarment3(auxCompany);
+        Garment auxGarment4 = createAuxGarment4(auxCompany);
+        auxUserGarments.add(auxGarment1);
+        auxUserGarments.add(auxGarment2);
+        auxUserGarments.add(auxGarment3);
+        auxUserGarments.add(auxGarment4);
+    }
+
+    private Garment createAuxGarment4(Company auxCompany) {
+        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxfour).copy(Bitmap.Config.RGB_565, false);
+        int bytes = picture.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(bytes);
+        picture.copyPixelsToBuffer(buffer);
+        byte[] pictureBytes = buffer.array();
+        Set<Color> auxColors1 = new HashSet<>();
+        Color auxColor1 = new Color("Black");
+        Color auxColor2 = new Color("White");
+        auxColors1.add(auxColor1);
+        auxColors1.add(auxColor2);
+        Set<Material> auxMaterials1 = new HashSet<>();
+        Material auxMaterial1 = new Material("Cotton");
+        auxMaterials1.add(auxMaterial1);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.HAT, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, pictureBytes);
+    }
+
+    private Garment createAuxGarment3(Company auxCompany) {
+        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxthree).copy(Bitmap.Config.RGB_565, false);
+        int bytes = picture.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(bytes);
+        picture.copyPixelsToBuffer(buffer);
+        byte[] pictureBytes = buffer.array();
+        Set<Color> auxColors1 = new HashSet<>();
+        Color auxColor1 = new Color("Black");
+        Color auxColor2 = new Color("Red");
+        auxColors1.add(auxColor1);
+        auxColors1.add(auxColor2);
+        Set<Material> auxMaterials1 = new HashSet<>();
+        Material auxMaterial1 = new Material("Leather");
+        Material auxMaterial2 = new Material("Jean");
+        Material auxMaterial3 = new Material("Cotton");
+        auxMaterials1.add(auxMaterial1);
+        auxMaterials1.add(auxMaterial2);
+        auxMaterials1.add(auxMaterial3);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.SHOE, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, pictureBytes);
+    }
+
+    private Garment createAuxGarment2(Company auxCompany) {
+        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxtwo).copy(Bitmap.Config.RGB_565, false);
+        int bytes = picture.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(bytes);
+        picture.copyPixelsToBuffer(buffer);
+        byte[] pictureBytes = buffer.array();
+        Set<Color> auxColors1 = new HashSet<>();
+        Color auxColor1 = new Color("Blue");
+        Color auxColor2 = new Color("Red");
+        auxColors1.add(auxColor1);
+        auxColors1.add(auxColor2);
+        Set<Material> auxMaterials1 = new HashSet<>();
+        Material auxMaterial1 = new Material("Silk");
+        Material auxMaterial2 = new Material("Nylon");
+        auxMaterials1.add(auxMaterial1);
+        auxMaterials1.add(auxMaterial2);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.TOP, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, pictureBytes);
+    }
+
+    private Garment createAuxGarment1(Company auxCompany) {
+        Bitmap picture = BitmapFactory.decodeResource(this.getResources(), R.drawable.auxone).copy(Bitmap.Config.RGB_565, false);
+        int bytes = picture.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(bytes);
+        picture.copyPixelsToBuffer(buffer);
+        byte[] pictureBytes = buffer.array();
+        Set<Color> auxColors1 = new HashSet<>();
+        Color auxColor1 = new Color("Black");
+        Color auxColor2 = new Color("White");
+        auxColors1.add(auxColor1);
+        auxColors1.add(auxColor2);
+        Set<Material> auxMaterials1 = new HashSet<>();
+        Material auxMaterial1 = new Material("Leather");
+        Material auxMaterial2 = new Material("Cotton");
+        auxMaterials1.add(auxMaterial1);
+        auxMaterials1.add(auxMaterial2);
+        return new Garment("12345", "cute.jpg", "Some Guy", 123.45, Mood.FORMAL, BodyPart.BOTTOM, GarmentType.BEANIE, true, true, false, "", auxCompany, auxColors1, auxMaterials1, pictureBytes);
     }
 }

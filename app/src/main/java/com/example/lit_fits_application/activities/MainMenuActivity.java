@@ -1,9 +1,9 @@
 package com.example.lit_fits_application.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.transition.Explode;
@@ -14,6 +14,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lit_fits_application.R;
 import com.example.lit_fits_application.entities.User;
@@ -49,24 +51,31 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      * The User that logged in
      */
     private User user;
+    static final int TAKE_PHOTO_REQUEST = 1;
     private Bundle extrasBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
-        findViews();
-        animate();
-        setListenerForButtons();
-        extrasBundle = new Bundle();
-        extrasBundle = getIntent().getExtras();
-        user = (User) extrasBundle.get("USER");
-        // user.getGarments().getGarments().stream().forEach(garment -> Log.println(Log.INFO , "garment Id: ", String.valueOf(garment.getId())));
-        getWindow().setEnterTransition(new Fade());
-        getWindow().setExitTransition(new Explode());
+        try {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main_menu);
+            findViews();
+            animate();
+            setListenerForButtons();
+            extrasBundle = new Bundle();
+            extrasBundle = getIntent().getExtras();
+            user = (User) extrasBundle.get("USER");
+            getWindow().setEnterTransition(new Fade());
+            getWindow().setExitTransition(new Explode());
+        } catch (Exception e) {
+            createAlertDialog(e.getMessage());
+        }
     }
 
+    /**
+     * Sets up the silly animations
+     */
     private void animate() {
         Animation animationZoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_back_in);
         Animation animationLeftIn = AnimationUtils.loadAnimation(this, R.anim.left_in);
@@ -79,14 +88,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         litFitsLogo.startAnimation(animationZoomIn);
     }
 
+    /**
+     * Sets the listeners for the buttons
+     */
     private void setListenerForButtons() {
         buttonCloset.setOnClickListener(this);
         buttonRecommendation.setOnClickListener(this);
         buttonTastes.setOnClickListener(this);
         buttonModifyAccount.setOnClickListener(this);
         buttonLogOut.setOnClickListener(this);
+        litFitsLogo.setOnClickListener(this);
     }
 
+    /**
+     * Finds the views by their id
+     */
     private void findViews() {
         buttonCloset = findViewById(R.id.buttonCloset);
         buttonTastes = findViewById(R.id.buttonTastes);
@@ -120,12 +136,38 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 Intent loginActivityIntent = new Intent(this, LoginActivity.class);
                 user = null;
                 startActivity(loginActivityIntent);
+            } else if (v.getId() == litFitsLogo.getId()) {
+                takePhoto();
             }
         } catch (Exception ex) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(ex.getMessage());
-            alert.show();
-            ex.printStackTrace();
+            createAlertDialog(ex.getMessage());
         }
+    }
+
+    /**
+     * Starts an activity to take a picture
+     */
+    private void takePhoto() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, TAKE_PHOTO_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TAKE_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            litFitsLogo.setImageBitmap(photo);
+        }
+    }
+
+    /**
+     * Creates an AlertDialog
+     *
+     * @param message
+     */
+    private void createAlertDialog(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message);
+        alert.show();
     }
 }
