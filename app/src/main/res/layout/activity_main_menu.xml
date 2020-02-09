@@ -22,10 +22,9 @@
         android:id="@+id/buttonModifyAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="104dp"
         android:text="@string/buttonModifyAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRecommendation" />
 
@@ -33,13 +32,14 @@
         android:id="@+id/buttonTastes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
         android:text="@string/buttonTaste"
         app:layout_constraintBottom_toTopOf="@+id/buttonModifyAccount"
         app:layout_constraintEnd_toStartOf="@+id/buttonCloset"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRecommendation"
-        app:layout_constraintVertical_bias="0.269" />
+        app:layout_constraintVertical_bias="0.272" />
 
     <Button
         android:id="@+id/buttonCloset"
@@ -50,11 +50,11 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonModifyAccount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRecommendation"
-        app:layout_constraintVertical_bias="0.269" />
+        app:layout_constraintVertical_bias="0.272" />
 
     <Button
         android:id="@+id/buttonRecommendation"
-        android:layout_width="296dp"
+        android:layout_width="295dp"
         android:layout_height="49dp"
         android:layout_marginTop="20dp"
         android:text="@string/buttonRecommendation"
@@ -65,12 +65,12 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="280dp"
-        android:layout_height="295dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="295dp"
+        android:layout_height="374dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/litfitslogo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

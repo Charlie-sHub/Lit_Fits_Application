@@ -80,7 +80,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
+            // Gotta go Fast
             musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.gotta_go_fast_soundtrack);
+            //musicPlayer = MediaPlayer.create(LoginActivity.this, R.raw.app_soundtrack);
             musicPlayer.start();
             // uri = getResources().getString(R.string.uri);
             findViews();
@@ -96,8 +98,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Sets up the animations
+     */
     private void animate() {
-        Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.flicker);
         Animation animationZoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_back_in);
         btnRegister.startAnimation(animationFadeOut);
         btnLogin.startAnimation(animationZoomIn);
@@ -149,7 +154,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 onBtnRegisterPress();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             createAlertDialog(e.getMessage());
         }
     }

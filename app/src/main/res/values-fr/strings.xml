@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_Save">Sauvegarder</string>
+    <string name="btn_register">S\'inscrire</string>
+    <string name="btn_submit">Soumettre</string>
+    <string name="buttonCloset">Voir Garde-Robe</string>
+    <string name="buttonGoBack">Retour</string>
+    <string name="buttonLogOut">Sortir</string>
+    <string name="buttonModifyAccount">Modifier Compte</string>
+    <string name="buttonRecommendation">Recommandation</string>
+    <string name="buttonTaste">Voir Gouts</string>
+    <string name="field_email">Email</string>
+    <string name="field_full_name">Nom Complet</string>
+    <string name="field_NewPassword">Nouveau Mot de Passe</string>
+    <string name="field_password">Mot de Passe</string>
+    <string name="field_password_confirm">Confirmez le Mot de Passe</string>
+    <string name="field_username">Nom de Compte</string>
+    <string name="lbl_no_account">Vous n\'avez pas du compte?</string>
+    <string name="lbl_password">Mot de Passe</string>
+    <string name="lbl_user_name">Nom de Compte</string>
+    <string name="txtModifyAccount">Modifier le Compte</string>
+</resources>

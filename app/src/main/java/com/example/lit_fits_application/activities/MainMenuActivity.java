@@ -46,6 +46,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      * Button to log out of Lit Fits
      */
     private Button buttonLogOut;
+    /**
+     * ImageView with the logo, it can also "take" photos from the phone's camera
+     */
     private ImageView litFitsLogo;
     /**
      * The User that logged in
